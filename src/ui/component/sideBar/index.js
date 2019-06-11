@@ -1,11 +1,11 @@
 import { connect } from 'react-redux';
-import { selectUnreadAmount } from 'redux/selectors/subscriptions';
-import { selectShouldShowInviteGuide } from 'redux/selectors/app';
+import { selectSubscriptions } from 'redux/selectors/subscriptions';
+import { selectFollowedTags } from 'lbry-redux';
 import SideBar from './view';
 
 const select = state => ({
-  unreadSubscriptionTotal: selectUnreadAmount(state),
-  shouldShowInviteGuide: selectShouldShowInviteGuide(state),
+  subscriptions: selectSubscriptions(state),
+  followedTags: selectFollowedTags(state),
 });
 
 const perform = () => ({});
