@@ -5,6 +5,7 @@
   border-radius: var(--card-radius);
   box-shadow: var(--card-box-shadow) $lbry-gray-1;
   overflow: hidden;
+  font-size: 1.25rem;
 
   html[data-mode='dark'] & {
     background-color: lighten($lbry-black, 5%);
@@ -83,12 +84,14 @@
   padding-top: var(--spacing-small);
 }
 
+.card__actions--table {
+  padding: var(--spacing-medium);
+}
+
 //  C A R D
 //  C O N T E N T
 
 .card__content {
-  font-size: 1.25rem;
-
   p:not(:last-child) {
     margin-bottom: var(--spacing-medium);
   }
@@ -113,41 +116,13 @@
 //  L I S T
 
 .card__list {
-  display: grid;
-  grid-gap: var(--spacing-medium);
-  margin-top: var(--spacing-large);
-
-  // Depending on screen width, the amount of items in
-  // each row change and are auto-sized
-
-  // @media (min-width: 2001px) {
-  //   grid-template-columns: repeat(auto-fill, minmax(calc(100% / 10), 1fr));
-  // }
-
-  // @media (min-width: 1801px) and (max-width: 2000px) {
-  //   grid-template-columns: repeat(auto-fill, minmax(calc(100% / 8), 1fr));
-  // }
-
-  @media (min-width: 1551px) {
-    grid-template-columns: repeat(auto-fill, minmax(calc(100% / 7), 1fr));
-  }
-
-  @media (min-width: 1200px) and (max-width: 1550px) {
-    grid-template-columns: repeat(auto-fill, minmax(calc(100% / 6), 1fr));
-  }
-
-  grid-template-columns: repeat(auto-fill, minmax(calc(100% / 5), 1fr));
-}
-
-.card__list--rewards {
-  column-count: 2;
+  column-count: 3;
   column-gap: var(--spacing-medium);
-  margin-bottom: var(--spacing-large);
+  display: block;
 
   .card {
     display: inline-block;
     margin: 0 0 var(--spacing-medium);
-    width: 100%;
   }
 }
 
@@ -185,6 +160,7 @@
 .card__subtitle {
   @extend .help;
   color: darken($lbry-gray-5, 25%);
+  background-color: lighten($lbry-gray-1, 5%);
   font-size: 1.15rem;
   margin-bottom: var(--spacing-small);
   flex: 1;

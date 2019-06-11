@@ -203,7 +203,7 @@ fieldset-section {
     // input-submit is connected to a button
     // The input height needs to match the button height to lineup correctly
     // Other inputs are fine since they are on their own and are used under different circumstances
-    input[type='text'] {
+    input {
       height: var(--button-height);
 
       [data-mode='dark'] & {

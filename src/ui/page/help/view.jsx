@@ -198,8 +198,8 @@ class HelpPage extends React.PureComponent<Props, State> {
         <BackupSection />
         {/* @endif */}
 
-        <section className="card card--section">
-          <header className="card__header">
+        <section className="card">
+          <header className="table__header">
             <h2 className="card__title">{__('About')}</h2>
 
             {this.state.upgradeAvailable !== null && this.state.upgradeAvailable ? (

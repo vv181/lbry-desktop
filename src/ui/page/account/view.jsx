@@ -3,10 +3,11 @@ import classnames from 'classnames';
 import WalletBalance from 'component/walletBalance';
 import RewardSummary from 'component/rewardSummary';
 import TransactionListRecent from 'component/transactionListRecent';
-import WalletAddress from 'component/walletAddress';
 import Page from 'component/page';
 import UnsupportedOnWeb from 'component/common/unsupported-on-web';
-import WalletSend from 'component/walletSend';
+// import WalletAddress from 'component/walletAddress';
+// import WalletSend from 'component/walletSend';
+import UserEmail from 'component/userEmail';
 
 const WalletPage = () => (
   <Page>
@@ -16,9 +17,8 @@ const WalletPage = () => (
         <WalletBalance />
         <RewardSummary />
       </div>
-      <WalletAddress />
-      <WalletSend />
       <TransactionListRecent />
+      <UserEmail />
     </div>
   </Page>
 );

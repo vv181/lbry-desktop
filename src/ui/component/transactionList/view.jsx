@@ -7,17 +7,21 @@ import Button from 'component/button';
 import FileExporter from 'component/common/file-exporter';
 import { TRANSACTIONS } from 'lbry-redux';
 import TransactionListItem from './internal/transaction-list-item';
+import RefreshTransactionButton from 'component/transactionRefreshButton';
+import Spinner from 'component/spinner';
 
 type Props = {
   emptyMessage: ?string,
-  slim?: boolean,
-  transactions: Array<Transaction>,
-  rewards: {},
-  openModal: (id: string, { nout: number, txid: string }) => void,
+  filterSetting: string,
+  loading: boolean,
   mySupports: {},
   myClaims: any,
-  filterSetting: string,
+  openModal: (id: string, { nout: number, txid: string }) => void,
+  rewards: {},
   setTransactionFilter: string => void,
+  slim?: boolean,
+  title: string,
+  transactions: Array<Transaction>,
 };
 
 class TransactionList extends React.PureComponent<Props> {
@@ -53,7 +57,7 @@ class TransactionList extends React.PureComponent<Props> {
   }
 
   render() {
-    const { emptyMessage, rewards, transactions, slim, filterSetting } = this.props;
+    const { emptyMessage, rewards, transactions, slim, filterSetting, title, loading } = this.props;
 
     // The shorter "recent transactions" list shouldn't be filtered
     const transactionList = slim ? transactions : transactions.filter(this.filterTransaction);
@@ -65,9 +69,23 @@ class TransactionList extends React.PureComponent<Props> {
 
     return (
       <React.Fragment>
-        <header className="card__header">
+        <header className="table__header">
+          <h2 className="card__title card__title--flex-between">
+            <span>
+              {title}
+              {loading && <Spinner type="small" />}
+            </span>
+            <div className="card__actions">
+              {slim && (
+                <Button button="link" className="button--alt" navigate="/$/transactions" label={__('Full History')} />
+              )}
+              <RefreshTransactionButton />
+            </div>
+          </h2>
+        </header>
+        <header className="card__header table__header">
           {!slim && !!transactions.length && (
-            <div className="card__actions card__actions--between card__actions--top-space">
+            <div className="card__actions card__actions--between">
               <FileExporter
                 data={transactionList}
                 label={__('Export')}
@@ -102,7 +120,10 @@ class TransactionList extends React.PureComponent<Props> {
             </div>
           )}
         </header>
-        {!transactionList.length && <p className="card__subtitle">{emptyMessage || __('No transactions to list.')}</p>}
+
+        {!loading && !transactionList.length && (
+          <p className="main--empty empty">{emptyMessage || __('No transactions.')}</p>
+        )}
 
         {!!transactionList.length && (
           <React.Fragment>
