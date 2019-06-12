@@ -19,6 +19,7 @@ import FileDownloadLink from 'component/fileDownloadLink';
 import classnames from 'classnames';
 import getMediaType from 'util/get-media-type';
 import RecommendedContent from 'component/recommendedContent';
+import DocumentMeta from 'react-document-meta';
 
 type Props = {
   claim: StreamClaim,
@@ -147,6 +148,45 @@ class FilePage extends React.Component<Props> {
       showToast,
     } = this.props;
 
+    const claimAuthor = `${claim.value.author} (${claim.channel_name})`;
+    const claimDescription =
+      claim.value.description.length > 0 ? claim.value.description : 'Visit LBRY.tv for more content!';
+    const claimTitle = `${title} from ${claimAuthor} on LBRY.tv`;
+
+    const metatags = {
+      canonical: uri,
+      description: claimDescription,
+      meta: {
+        charset: 'utf-8',
+        name: {
+          author: claimAuthor,
+          // keywords: '', // content tags go here
+          'twitter:image': thumbnail,
+        },
+        property: {
+          'og:description': claimDescription,
+          'og:image': thumbnail,
+          'og:locale': claim.value.languages[0],
+          'og:site_name': 'LBRY.tv',
+          'og:title': claimTitle,
+          'og:type': 'website',
+          'og:url': uri,
+        },
+        title: claimTitle,
+      },
+      title: claimTitle,
+    };
+
+    if (claim.value.source.media_type.includes('video')) {
+      metatags.meta.name['twitter:player'] = uri;
+      metatags.meta.property['og:video:url'] = uri;
+    }
+
+    // TODO:
+    // contentTags.forEach(contentTag => {
+    //   meta.meta.property['video:tag'] = contentTag;
+    // });
+
     // File info
     const { channel_name: channelName } = claim;
     const { PLAYABLE_MEDIA_TYPES, PREVIEW_MEDIA_TYPES } = FilePage;
@@ -179,138 +219,140 @@ class FilePage extends React.Component<Props> {
     const insufficientCredits = !claimIsMine && costInfo && costInfo.cost > balance;
 
     return (
-      <Page notContained className="main--file-page">
-        <div className="grid-area--content">
-          <Button
-            className="media__uri"
-            button="alt"
-            label={uri}
-            onClick={() => {
-              clipboard.writeText(uri);
-              showToast({
-                message: __('Text copied'),
-              });
-            }}
-          />
-          {!fileInfo && insufficientCredits && (
-            <div className="media__insufficient-credits help--warning">
-              {__(
-                'The publisher has chosen to charge LBC to view this content. Your balance is currently to low to view it.'
-              )}{' '}
-              {__('Checkout')} <Button button="link" navigate="/$/rewards" label={__('the rewards page')} />{' '}
-              {__('or send more LBC to your wallet.')}
-            </div>
-          )}
-          {showFile && (
-            <FileViewer
-              uri={uri}
-              className="content__embedded"
-              mediaType={mediaType}
-              isPlayableType={isPlayableType}
-              viewerContainer={this.viewerContainer}
-              insufficientCredits={insufficientCredits}
+      <DocumentMeta {...metatags}>
+        <Page notContained className="main--file-page">
+          <div className="grid-area--content">
+            <Button
+              className="media__uri"
+              button="alt"
+              label={uri}
+              onClick={() => {
+                clipboard.writeText(uri);
+                showToast({
+                  message: __('Text copied'),
+                });
+              }}
             />
-          )}
-          {!showFile &&
-            (thumbnail ? (
-              <Thumbnail shouldObscure={shouldObscureThumbnail} src={thumbnail} />
-            ) : (
-              <div
-                className={classnames('content__empty', {
-                  'content__empty--nsfw': shouldObscureThumbnail,
-                })}
-              >
-                <div className="card__media-text">{__("Sorry, looks like we can't preview this file.")}</div>
+            {!fileInfo && insufficientCredits && (
+              <div className="media__insufficient-credits help--warning">
+                {__(
+                  'The publisher has chosen to charge LBC to view this content. Your balance is currently to low to view it.'
+                )}{' '}
+                {__('Checkout')} <Button button="link" navigate="/$/rewards" label={__('the rewards page')} />{' '}
+                {__('or send more LBC to your wallet.')}
               </div>
-            ))}
-        </div>
-
-        <div className="grid-area--info media__content media__content--large">
-          <h1 className="media__title media__title--large">{title}</h1>
-
-          <div className="media__properties media__properties--large">
-            {isRewardContent && (
-              <Icon
-                size={20}
-                iconColor="red"
-                icon={icons.FEATURED}
-                // Figure out how to get the tooltip to overlap the navbar on the file page and I will love you
-                // https://stackoverflow.com/questions/6421966/css-overflow-x-visible-and-overflow-y-hidden-causing-scrollbar-issue
-                // https://spee.ch/4/overflow-issue
-                // tooltip="bottom"
+            )}
+            {showFile && (
+              <FileViewer
+                uri={uri}
+                className="content__embedded"
+                mediaType={mediaType}
+                isPlayableType={isPlayableType}
+                viewerContainer={this.viewerContainer}
+                insufficientCredits={insufficientCredits}
               />
             )}
-            {nsfw && <div className="badge badge--nsfw">MATURE</div>}
-            <FilePrice badge uri={normalizeURI(uri)} />
+            {!showFile &&
+              (thumbnail ? (
+                <Thumbnail shouldObscure={shouldObscureThumbnail} src={thumbnail} />
+              ) : (
+                <div
+                  className={classnames('content__empty', {
+                    'content__empty--nsfw': shouldObscureThumbnail,
+                  })}
+                >
+                  <div className="card__media-text">{__("Sorry, looks like we can't preview this file.")}</div>
+                </div>
+              ))}
           </div>
 
-          <div className="media__actions media__actions--between">
-            <div className="media__subtext media__subtext--large">
-              <div className="media__subtitle__channel">
-                <UriIndicator uri={uri} link />
-              </div>
-              {__('Published on')} <DateTime uri={uri} show={DateTime.SHOW_DATE} />
-            </div>
+          <div className="grid-area--info media__content media__content--large">
+            <h1 className="media__title media__title--large">{title}</h1>
 
-            {claimIsMine && (
-              <div className="media__subtext--large">
-                {viewCount} {viewCount !== 1 ? __('Views') : __('View')}
-              </div>
-            )}
-          </div>
-
-          <div className="media__actions media__actions--between">
-            <div className="media__action-group--large">
-              {claimIsMine && (
-                <Button
-                  button="primary"
-                  icon={icons.EDIT}
-                  label={__('Edit')}
-                  navigate="/$/publish"
-                  onClick={() => {
-                    prepareEdit(claim, editUri, fileInfo);
-                  }}
+            <div className="media__properties media__properties--large">
+              {isRewardContent && (
+                <Icon
+                  size={20}
+                  iconColor="red"
+                  icon={icons.FEATURED}
+                  // Figure out how to get the tooltip to overlap the navbar on the file page and I will love you
+                  // https://stackoverflow.com/questions/6421966/css-overflow-x-visible-and-overflow-y-hidden-causing-scrollbar-issue
+                  // https://spee.ch/4/overflow-issue
+                  // tooltip="bottom"
                 />
               )}
-              {!claimIsMine && (
-                <React.Fragment>
-                  {channelUri && <SubscribeButton uri={channelUri} channelName={channelName} />}
+              {nsfw && <div className="badge badge--nsfw">MATURE</div>}
+              <FilePrice badge uri={normalizeURI(uri)} />
+            </div>
 
-                  <Button
-                    button="alt"
-                    icon={icons.TIP}
-                    label={__('Send a tip')}
-                    onClick={() => openModal(MODALS.SEND_TIP, { uri })}
-                  />
-                </React.Fragment>
+            <div className="media__actions media__actions--between">
+              <div className="media__subtext media__subtext--large">
+                <div className="media__subtitle__channel">
+                  <UriIndicator uri={uri} link />
+                </div>
+                {__('Published on')} <DateTime uri={uri} show={DateTime.SHOW_DATE} />
+              </div>
+
+              {claimIsMine && (
+                <div className="media__subtext--large">
+                  {viewCount} {viewCount !== 1 ? __('Views') : __('View')}
+                </div>
               )}
-              <Button
-                button="alt"
-                icon={icons.SHARE}
-                label={__('Share')}
-                onClick={() => openModal(MODALS.SOCIAL_SHARE, { uri, speechShareable })}
-              />
             </div>
 
-            <div className="media__action-group--large">
-              <FileDownloadLink uri={uri} />
-              <FileActions
-                uri={uri}
-                claimId={claim.claim_id}
-                showFullscreen={isPreviewType}
-                viewerContainer={this.viewerContainer}
-              />
+            <div className="media__actions media__actions--between">
+              <div className="media__action-group--large">
+                {claimIsMine && (
+                  <Button
+                    button="primary"
+                    icon={icons.EDIT}
+                    label={__('Edit')}
+                    navigate="/$/publish"
+                    onClick={() => {
+                      prepareEdit(claim, editUri, fileInfo);
+                    }}
+                  />
+                )}
+                {!claimIsMine && (
+                  <React.Fragment>
+                    {channelUri && <SubscribeButton uri={channelUri} channelName={channelName} />}
+
+                    <Button
+                      button="alt"
+                      icon={icons.TIP}
+                      label={__('Send a tip')}
+                      onClick={() => openModal(MODALS.SEND_TIP, { uri })}
+                    />
+                  </React.Fragment>
+                )}
+                <Button
+                  button="alt"
+                  icon={icons.SHARE}
+                  label={__('Share')}
+                  onClick={() => openModal(MODALS.SOCIAL_SHARE, { uri, speechShareable })}
+                />
+              </div>
+
+              <div className="media__action-group--large">
+                <FileDownloadLink uri={uri} />
+                <FileActions
+                  uri={uri}
+                  claimId={claim.claim_id}
+                  showFullscreen={isPreviewType}
+                  viewerContainer={this.viewerContainer}
+                />
+              </div>
+            </div>
+
+            <div className="media__info--large">
+              <FileDetails uri={uri} />
             </div>
           </div>
-
-          <div className="media__info--large">
-            <FileDetails uri={uri} />
+          <div className="grid-area--related">
+            <RecommendedContent uri={uri} />
           </div>
-        </div>
-        <div className="grid-area--related">
-          <RecommendedContent uri={uri} />
-        </div>
-      </Page>
+        </Page>
+      </DocumentMeta>
     );
   }
 }
