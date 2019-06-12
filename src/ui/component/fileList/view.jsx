@@ -35,7 +35,7 @@ export default function FileList(props: Props) {
   return (
     <section className={classnames('file-list')}>
       {!noHeader && (
-        <div className="file-list__header">
+        <div className={classnames('file-list__header', { 'file-list__header--slim': slim })}>
           {header || (
             <FormField
               className="file-list__dropdown"

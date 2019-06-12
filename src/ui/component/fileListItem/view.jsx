@@ -110,7 +110,7 @@ function FileListItem(props: Props) {
           {!slim && (
             <div>
               {isChannel && <SubscribeButton uri={uri.startsWith('lbry://') ? uri : `lbry://${uri}`} />}
-              <FileProperties uri={uri} />
+              {!isChannel && <FileProperties uri={uri} />}
             </div>
           )}
         </div>

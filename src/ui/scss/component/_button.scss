@@ -32,7 +32,7 @@
 }
 
 .button--primary,
-.button--alt,
+// .button--alt,
 .button--inverse {
   height: var(--button-height);
   line-height: var(--button-height);
@@ -79,21 +79,23 @@
   align-items: flex-start;
 }
 
+.button__content {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
 .button__label {
-  // white-space: nowrap;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   // display: flex;
   // align-items: center;
+  // FIX THIS
 }
 
 // Handle icons on the left or right side of the button label
 svg + .button__label,
 .button__label + svg {
   margin-left: var(--spacing-miniscule);
-}
-
-.button__content {
-  display: flex;
-  align-items: center;
 }

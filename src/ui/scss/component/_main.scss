@@ -36,7 +36,6 @@
 
 .main--file-page {
   display: grid;
-  grid-gap: var(--spacing-large);
   grid-template-rows: auto 1fr;
   grid-template-columns: 1fr auto;
   max-width: calc(100% - var(--side-nav-width) - var(--spacing-main-padding));
@@ -57,7 +56,7 @@
   }
   .grid-area--related {
     grid-area: related;
-    width: 40rem;
+    width: 35rem;
   }
 }
 

@@ -28,25 +28,25 @@ class RewardSummary extends React.Component<Props> {
             {__('Rewards')}
             {fetching && <BusyIndicator />}
           </h2>
-
-          <p className="card__subtitle">
-            {!fetching &&
-              (hasRewards ? (
-                <React.Fragment>
-                  {__('You have')}
-                  &nbsp;
-                  <CreditAmount inheritStyle amount={unclaimedRewardAmount} precision={8} />
-                  &nbsp;
-                  {__('in unclaimed rewards')}.
-                </React.Fragment>
-              ) : (
-                <React.Fragment>
-                  {__('There are no rewards available at this time, please check back later')}.
-                </React.Fragment>
-              ))}{' '}
-            <Button button="link" label={__('Learn more')} href="https://lbry.com/faq/rewards" />.
-          </p>
         </header>
+
+        <p className="card__subtitle">
+          {!fetching &&
+            (hasRewards ? (
+              <React.Fragment>
+                {__('You have')}
+                &nbsp;
+                <CreditAmount inheritStyle amount={unclaimedRewardAmount} precision={8} />
+                &nbsp;
+                {__('in unclaimed rewards')}.
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                {__('There are no rewards available at this time, please check back later')}.
+              </React.Fragment>
+            ))}{' '}
+          <Button button="link" label={__('Learn more')} href="https://lbry.com/faq/rewards" />.
+        </p>
 
         <div className="card__content">
           <div className="card__actions">

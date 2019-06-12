@@ -40,7 +40,7 @@ function FileListDiscover(props: Props) {
     const options = {};
     const newTags = tagsString.split(',');
 
-    if ((tags && !personal) || (tags && personal && personalSort === SEARCH_SORT_YOU)) {
+    if ((newTags && !personal) || (newTags && personal && personalSort === SEARCH_SORT_YOU)) {
       options.any_tags = newTags;
     }
 
@@ -61,13 +61,24 @@ function FileListDiscover(props: Props) {
     }
 
     doClaimSearch(20, options);
-  }, [personalSort, typeSort, timeSort, doClaimSearch, tagsString]);
+  }, [personal, personalSort, typeSort, timeSort, doClaimSearch, tagsString]);
 
   const header = (
-    <React.Fragment>
-      <h1 className={`card__title--flex`}>
-        {toCapitalCase(typeSort)} {'For'}
-      </h1>
+    <h1 className={`card__title--flex`}>
+      <FormField
+        className="file-list__dropdown"
+        type="select"
+        name="trending_sort"
+        value={typeSort}
+        onChange={e => setTypeSort(e.target.value)}
+      >
+        {SEARCH_TYPES.map(type => (
+          <option key={type} value={type}>
+            {toCapitalCase(type)}
+          </option>
+        ))}
+      </FormField>
+      <span>{__('For')}</span>
       {!personal && tags && tags.length ? (
         tags.map(tag => (
           <span key={tag} className="tag tag--remove" disabled>
@@ -89,24 +100,11 @@ function FileListDiscover(props: Props) {
           ))}
         </FormField>
       )}
-    </React.Fragment>
+    </h1>
   );
 
   const headerAltControls = (
     <React.Fragment>
-      <FormField
-        className="file-list__dropdown"
-        type="select"
-        name="trending_sort"
-        value={typeSort}
-        onChange={e => setTypeSort(e.target.value)}
-      >
-        {SEARCH_TYPES.map(type => (
-          <option key={type} value={type}>
-            {toCapitalCase(type)}
-          </option>
-        ))}
-      </FormField>
       {typeSort === 'top' && (
         <FormField
           className="file-list__dropdown"
