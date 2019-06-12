@@ -148,7 +148,7 @@ class FilePage extends React.Component<Props> {
       showToast,
     } = this.props;
 
-    const claimAuthor = `${claim.value.author} (${claim.channel_name})`;
+    const claimAuthor = claim.channel_name ? claim.channel_name : 'Anonymous';
     const claimDescription =
       claim.value.description.length > 0 ? claim.value.description : 'Visit LBRY.tv for more content!';
     const claimTitle = `${title} from ${claimAuthor} on LBRY.tv`;
