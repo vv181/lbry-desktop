@@ -1,5 +1,11 @@
 import { connect } from 'react-redux';
-import { selectFollowedTags, doClaimSearch, selectLastClaimSearchUris, selectFetchingClaimSearch } from 'lbry-redux';
+import {
+  selectFollowedTags,
+  doClaimSearch,
+  selectLastClaimSearchUris,
+  selectFetchingClaimSearch,
+  doToggleTagFollow,
+} from 'lbry-redux';
 import FileListDiscover from './view';
 
 const select = state => ({
@@ -10,6 +16,7 @@ const select = state => ({
 
 const perform = {
   doClaimSearch,
+  doToggleTagFollow,
 };
 
 export default connect(

@@ -1,8 +1,9 @@
 // @flow
 import React, { useEffect } from 'react';
+import moment from 'moment';
 import { FormField } from 'component/common/form';
 import FileList from 'component/fileList';
-import moment from 'moment';
+import Tag from 'component/tag';
 import usePersistedState from 'util/use-persisted-state';
 
 const TIME_DAY = 'day';
@@ -26,10 +27,13 @@ type Props = {
   tags: Array<string>,
   loading: boolean,
   personal: boolean,
+  followedTags: Array<Tag>,
+  doToggleTagFollow: string => void,
 };
 
 function FileListDiscover(props: Props) {
-  const { doClaimSearch, uris, tags, loading, personal, injectedItem } = props;
+  const { doClaimSearch, uris, tags, loading, personal, injectedItem, followedTags, doToggleTagFollow } = props;
+  const followedTagNames = followedTags.map(tag => tag.name);
   const [personalSort, setPersonalSort] = usePersistedState('file-list-trending:personalSort', SEARCH_SORT_YOU);
   const [typeSort, setTypeSort] = usePersistedState('file-list-trending:typeSort', TYPE_TRENDING);
   const [timeSort, setTimeSort] = usePersistedState('file-list-trending:timeSort', TIME_WEEK);
@@ -80,11 +84,12 @@ function FileListDiscover(props: Props) {
       </FormField>
       <span>{__('For')}</span>
       {!personal && tags && tags.length ? (
-        tags.map(tag => (
-          <span key={tag} className="tag tag--remove" disabled>
-            {tag}
-          </span>
-        ))
+        tags.map(tag => {
+          const isFollowing = followedTagNames.includes(tag);
+          return (
+            <Tag key={tag} name={tag} type={isFollowing ? 'remove' : 'add'} onClick={() => doToggleTagFollow(tag)} />
+          );
+        })
       ) : (
         <FormField
           type="select"

@@ -1,9 +1,7 @@
 // @flow
 import * as ICONS from 'constants/icons';
-
-import React, { Fragment } from 'react';
+import React from 'react';
 import classnames from 'classnames';
-import Icon from 'component/common/icon';
 import Button from 'component/button';
 
 type Props = {
@@ -13,7 +11,7 @@ type Props = {
 };
 
 export default function Tag(props: Props) {
-  const { name, type, onClick } = props;
+  const { name, onClick, type = 'link' } = props;
 
   const clickProps = onClick ? { onClick } : { navigate: `/$/tags?t=${name}` };
 
@@ -24,12 +22,9 @@ export default function Tag(props: Props) {
         'tag--add': type === 'add',
         'tag--remove': type === 'remove',
       })}
-      label={
-        <Fragment>
-          {name}
-          {type && <Icon className="tag__action-label" icon={type === 'remove' ? ICONS.CLOSE : ICONS.ADD} />}
-        </Fragment>
-      }
+      label={name}
+      iconSize={12}
+      iconRight={type !== 'link' && (type === 'remove' ? ICONS.CLOSE : ICONS.ADD)}
     />
   );
 }
