@@ -152,40 +152,44 @@ class FilePage extends React.Component<Props> {
     const claimDescription =
       claim.value.description.length > 0 ? claim.value.description : 'Visit LBRY.tv for more content!';
     const claimTitle = `${title} from ${claimAuthor} on LBRY.tv`;
+    const claimUrl = `https://beta.lbry.tv/${claim.normalized_name}/${claim.claim_id}`;
 
     const metatags = {
-      canonical: uri,
+      canonical: claimUrl,
       description: claimDescription,
       meta: {
         charset: 'utf-8',
         name: {
           author: claimAuthor,
-          // keywords: '', // content tags go here
+          keywords: claim.value.tags ? claim.value.tags.toString() : '',
           'twitter:image': thumbnail,
         },
         property: {
           'og:description': claimDescription,
           'og:image': thumbnail,
-          'og:locale': claim.value.languages[0],
+          'og:locale': claim.value.languages ? claim.value.languages[0] : 'en_US',
           'og:site_name': 'LBRY.tv',
           'og:title': claimTitle,
           'og:type': 'website',
-          'og:url': uri,
+          'og:url': claimUrl,
         },
         title: claimTitle,
       },
       title: claimTitle,
     };
 
-    if (claim.value.source.media_type.includes('video')) {
-      metatags.meta.name['twitter:player'] = uri;
-      metatags.meta.property['og:video:url'] = uri;
-    }
+    // if (claim.value.stream_type === 'video') {
+    //   metatags.meta.name['twitter:player'] = uri; // needs to be direct video link
+    //   metatags.meta.property['og:video:height'] = claim.value.video.height;
+    //   metatags.meta.property['og:video:url'] = uri; // needs to be direct video link
+    //   metatags.meta.property['og:video:width'] = claim.value.video.width;
+    // }
 
-    // TODO:
-    // contentTags.forEach(contentTag => {
-    //   meta.meta.property['video:tag'] = contentTag;
-    // });
+    // if (claim.value.tags) {
+    //   claim.value.tags.forEach(tag => {
+    //     metatags.meta.property['video:tag'] = tag;
+    //   });
+    // }
 
     // File info
     const { channel_name: channelName } = claim;
