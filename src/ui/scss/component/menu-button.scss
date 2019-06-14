@@ -44,25 +44,38 @@
 /* pseudo pseudo selector */
 [data-reach-menu-item][data-selected] {
   background: lighten($lbry-teal-5, 55%);
-  color: darken($lbry-teal-5, 20%);
+  color: darken($lbry-teal-5, 15%);
   outline: none;
 
   &:active {
     background-color: $lbry-teal-4;
     color: $lbry-white;
+    .icon {
+      stroke: $lbry-white;
+    }
   }
 
   [data-mode='dark'] & {
     background-color: $lbry-teal-5;
     color: $lbry-white;
+
+    &:hover,
+    &:focus {
+      .icon {
+        stroke: $lbry-white;
+      }
+    }
   }
 }
 
 .menu__title {
   padding: var(--spacing-large) 0;
-  padding-left: var(--spacing-medium);
-  margin-left: var(--spacing-small);
+  padding-left: 1rem;
   padding-right: 0;
+
+  span {
+    margin-left: 0.5rem;
+  }
 }
 
 .menu__link {
@@ -73,8 +86,12 @@
 
 .menu__title,
 .menu__link {
+  font-size: 1.2rem;
+
   .icon {
     margin-right: var(--spacing-small);
-    margin-bottom: 0.1rem;
+    margin-bottom: 0.2rem;
+
+    stroke: $lbry-gray-5;
   }
 }

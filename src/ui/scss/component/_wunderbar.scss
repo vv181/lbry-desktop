@@ -4,10 +4,10 @@
   cursor: text;
   display: flex;
   align-items: center;
-  flex: 1;
+  flex: 1 0;
   position: relative;
   z-index: 1;
-  margin-right: calc(var(--spacing-small));
+  margin-right: calc(var(--spacing-large));
 
   @media (max-width: 600px) {
     margin-right: 0;
@@ -39,8 +39,13 @@
   background-color: $lbry-gray-1;
   align-items: center;
   border: none;
-  display: flex;
-  justify-content: center;
+  min-width: 0;
+  padding-right: var(--spacing-small);
+  // display: flex;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
   padding-left: 2.5rem;
   transition: all 0.2s;
 

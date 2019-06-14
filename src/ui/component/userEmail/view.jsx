@@ -48,7 +48,7 @@ function UserEmail(props: Props) {
           )}
           <p className="help">
             {`${__(
-              'This information is disclosed only to LBRY, Inc. and not to the LBRY network. It is only required to earn LBRY rewards and may be used to sync usage data across devices.'
+              'This information is disclosed only to LBRY, Inc. and not to the LBRY network. It is only required to earn LBRY rewards.'
             )} `}
           </p>
         </React.Fragment>

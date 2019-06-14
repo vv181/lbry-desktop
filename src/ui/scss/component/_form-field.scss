@@ -176,15 +176,16 @@ fieldset-group {
 form {
   [type='button'],
   [type='submit'] {
-    &.button--primary {
+    &.button--inverse {
       &:not(:hover) {
-        background-color: $lbry-teal-5;
-        border-color: $lbry-teal-5;
+        background-color: transparent;
+        border-color: $lbry-black;
+        color: $lbry-black;
       }
 
       &:hover {
-        background-color: $lbry-teal-3;
-        border-color: $lbry-teal-3;
+        background-color: $lbry-teal-4;
+        // border-color: $lbry-teal-3;
       }
     }
   }

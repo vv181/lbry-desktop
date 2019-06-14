@@ -20,13 +20,15 @@ function SideBar(props: Props) {
   });
 
   const renderLink = linkProps => (
-    <Button {...linkProps} key={linkProps.label} className="navigation__link" activeClass="navigation__link--active" />
+    <li key={linkProps.label}>
+      <Button {...linkProps} className="navigation__link" activeClass="navigation__link--active" />
+    </li>
   );
 
   return (
     <div className="navigation-wrapper">
       <nav className="navigation">
-        <ul className="navigation__links">
+        <ul className="navigation__links tags--vertical">
           {[
             {
               ...buildLink(null, __('Home'), ICONS.HOME),
@@ -41,16 +43,16 @@ function SideBar(props: Props) {
               ...buildLink(PAGES.LIBRARY, __('Library'), ICONS.DOWNLOAD),
             },
           ].map(renderLink)}
-        </ul>
 
-        <Button
-          navigate="/$/tags/edit"
-          iconRight={ICONS.SETTINGS}
-          className="navigation__link--title navigation__link"
-          activeClass="navigation__link--active"
-          label={__('Following')}
-        />
-        <ul className="tags--vertical navigation__links">
+          <li>
+            <Button
+              navigate="/$/tags/edit"
+              icon="GitHub"
+              className="navigation__link"
+              activeClass="navigation__link--active"
+              label={__('Following')}
+            />
+          </li>
           {followedTags.map(({ name }, key) => (
             <li key={name}>
               <Tag navigate={`/$/tags?t${name}`} name={name} />

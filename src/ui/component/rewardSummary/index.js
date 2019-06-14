@@ -8,7 +8,7 @@ const select = state => ({
 });
 
 const perform = dispatch => ({
-  fetchRewards: () => dispatch(doRewardList()),
+  fetchRewards: () => {},
   fetchRewardedContent: () => dispatch(doFetchRewardedContent()),
 });
 

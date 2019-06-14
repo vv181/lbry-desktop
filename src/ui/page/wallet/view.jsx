@@ -6,14 +6,15 @@ import WalletAddress from 'component/walletAddress';
 import TransactionListRecent from 'component/transactionListRecent';
 import Page from 'component/page';
 
-const SendReceivePage = () => (
-  <Page>
-    <WalletBalance />
-    <TransactionListRecent />
-    <WalletSend />
-    <WalletAddress />
-    <div className="columns" />
-  </Page>
-);
+const SendReceivePage = ({ mySupports }) => {
+  return (
+    <Page>
+      <WalletBalance />
+      <TransactionListRecent />
+      <WalletSend />
+      <WalletAddress />
+    </Page>
+  );
+};
 
 export default SendReceivePage;

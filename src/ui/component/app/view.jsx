@@ -24,12 +24,11 @@ function App(props: Props) {
 
   useEffect(() => {
     ReactModal.setAppElement(appRef.current);
-    fetchRewards();
+    // fetchRewards();
     fetchRewardedContent();
   }, [fetchRewards, fetchRewardedContent]);
 
   useEffect(() => {
-    console.log('theme', theme);
     // $FlowFixMe
     document.documentElement.setAttribute('data-mode', theme);
   }, [theme]);

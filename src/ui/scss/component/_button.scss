@@ -18,7 +18,9 @@
   }
 }
 
-.button--primary {
+// Fix this in lbry/components
+.button--primary:not(:hover) {
+  background-color: $lbry-teal-4;
   svg {
     color: white;
   }
@@ -40,6 +42,18 @@
   padding-top: 0;
   padding-bottom: 0;
   box-sizing: border-box;
+}
+
+.button--inverse {
+  border-color: $lbry-teal-4;
+
+  &:hover {
+    color: $lbry-white;
+    background-color: $lbry-teal-4;
+    .icon {
+      stroke: $lbry-white;
+    }
+  }
 }
 
 .button--alt {

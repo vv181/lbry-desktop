@@ -57,7 +57,7 @@ code {
     flex-basis: 0;
     flex-grow: 1;
 
-    &:first-of-type {
+    &:first-child {
       margin-right: 1.5rem;
     }
   }

@@ -6,11 +6,14 @@
   background-color: $lbry-white;
   border-bottom: 1px solid $lbry-gray-1;
   user-select: none;
-
+  box-shadow: var(--card-box-shadow) $lbry-gray-1;
+  padding-left: var(--spacing-large);
+  padding-right: var(--spacing-large);
   html[data-mode='dark'] & {
     background-color: mix($lbry-black, $lbry-gray-3, 90%);
     color: $lbry-white;
     border-bottom: none;
+    box-shadow: var(--card-box-shadow) $lbry-black;
   }
 }
 
@@ -18,7 +21,6 @@
   width: 100%;
   height: calc(var(--header-height) - 1px);
   max-width: var(--page-max-width);
-  padding: 0 var(--spacing-medium);
   display: flex;
   justify-content: space-between;
   margin: auto;
@@ -30,10 +32,9 @@
 
   &:last-of-type {
     width: calc(var(--side-nav-width) + var(--spacing-medium));
-  }
-
-  @media (max-width: 600px) {
-    display: none;
+    @media (max-width: 600px) {
+      display: none;
+    }
   }
 }
 
@@ -113,18 +114,6 @@
   align-self: flex-end;
   margin-left: auto;
   padding: 0 var(--spacing-small);
-  // margin-right: 0;
-  // margin-right: auto;
-  // &:first-of-type {
-  // }
-  // margin-right: var(--spacing-medium);
-
-  // &:not(:first-of-type) {
-  // }
-
-  // &:last-of-type {
-  //   margin-right: 0;
-  // }
 }
 
 .header__navigation-item--upgrade {

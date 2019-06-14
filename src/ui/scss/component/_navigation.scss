@@ -6,9 +6,9 @@
 }
 
 .navigation {
-  position: fixed;
   width: var(--side-nav-width);
   font-size: 1.4rem;
+  position: fixed;
 
   @media (max-width: 600px) {
     display: none;
@@ -48,6 +48,12 @@
     .icon {
       color: $lbry-teal-4;
     }
+  }
+
+  .icon {
+    // Fix this
+    margin-right: var(--spacing-miniscule);
+    margin-bottom: 0.2rem;
   }
 
   [data-mode='dark'] & {
