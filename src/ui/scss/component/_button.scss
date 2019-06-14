@@ -31,6 +31,9 @@
   height: 5rem;
   width: 5rem;
   border-radius: 2.5rem;
+  &:not(:hover) {
+    background-color: $lbry-teal-4;
+  }
 }
 
 .button--primary,

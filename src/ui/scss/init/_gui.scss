@@ -130,7 +130,7 @@ code {
 .help {
   font-size: 1rem;
   background-color: rgba($lbry-blue-1, 0.1);
-  color: $lbry-gray-5;
+  color: darken($lbry-gray-5, 15%);
   display: block;
   padding: 1rem;
   margin-top: var(--spacing-medium);

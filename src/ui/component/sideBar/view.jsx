@@ -53,21 +53,24 @@ function SideBar(props: Props) {
               label={__('Following')}
             />
           </li>
+        </ul>
+        <ul className="navigation__links tags--vertical">
           {followedTags.map(({ name }, key) => (
-            <li key={name}>
+            <li className="navigation__link--indented" key={name}>
               <Tag navigate={`/$/tags?t${name}`} name={name} />
             </li>
           ))}
         </ul>
         <ul className="navigation__links--small">
-          {subscriptions.map(({ uri, channelName }) => (
-            <Button
-              key={uri}
-              navigate={uri}
-              label={channelName}
-              className="navigation__link"
-              activeClass="navigation__link--active"
-            />
+          {subscriptions.map(({ uri, channelName }, index) => (
+            <li key={uri} className="navigation__link--indented">
+              <Button
+                navigate={uri}
+                label={channelName}
+                className="navigation__link"
+                activeClass="navigation__link--active"
+              />
+            </li>
           ))}
         </ul>
       </nav>

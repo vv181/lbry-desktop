@@ -122,7 +122,7 @@ function FileListItem(props: Props) {
             <div>{isChannel ? `${claimsInChannel} ${__('publishes')}` : <DateTime timeAgo uri={uri} />}</div>
           </div>
 
-          {!slim && <FileTags uri={uri} />}
+          <FileTags uri={uri} slim={slim} />
         </div>
       </div>
     </li>

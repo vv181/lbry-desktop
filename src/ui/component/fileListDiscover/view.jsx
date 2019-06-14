@@ -4,6 +4,7 @@ import moment from 'moment';
 import { FormField } from 'component/common/form';
 import FileList from 'component/fileList';
 import Tag from 'component/tag';
+import Button from 'component/button';
 import usePersistedState from 'util/use-persisted-state';
 
 const TIME_DAY = 'day';
@@ -87,7 +88,15 @@ function FileListDiscover(props: Props) {
         tags.map(tag => {
           const isFollowing = followedTagNames.includes(tag);
           return (
-            <Tag key={tag} name={tag} type={isFollowing ? 'remove' : 'add'} onClick={() => doToggleTagFollow(tag)} />
+            //   <Tag key={tag} name={tag} type={isFollowing ? 'remove' : 'add'} onClick={() => doToggleTagFollow(tag)} />
+            <React.Fragment key={tag}>
+              <Tag name={tag} disabled />
+              <Button
+                button="alt"
+                label={isFollowing ? __('Following') : __('Follow')}
+                onClick={() => doToggleTagFollow(tag)}
+              />
+            </React.Fragment>
           );
         })
       ) : (

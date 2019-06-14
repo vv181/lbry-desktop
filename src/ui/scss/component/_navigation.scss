@@ -119,3 +119,15 @@
     }
   }
 }
+
+.navigation__link--indented {
+  padding-left: 2rem;
+}
+
+.navigation--notification {
+  height: 1rem;
+  width: 1rem;
+  border-radius: 1rem;
+  background-color: #333;
+  box-shadow: 0 0 5px 10px #333;
+}
