@@ -6,7 +6,6 @@ import Button from 'component/button';
 import LbcSymbol from 'component/common/lbc-symbol';
 import WunderBar from 'component/wunderbar';
 import Icon from 'component/common/icon';
-import ThemeToggler from 'component/themeToggler';
 import { Menu, MenuList, MenuButton, MenuItem, MenuLink } from '@reach/menu-button';
 import * as SETTINGS from 'constants/settings';
 type Props = {
