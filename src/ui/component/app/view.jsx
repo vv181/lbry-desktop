@@ -29,6 +29,7 @@ function App(props: Props) {
   }, [fetchRewards, fetchRewardedContent]);
 
   useEffect(() => {
+    console.log('theme', theme);
     // $FlowFixMe
     document.documentElement.setAttribute('data-mode', theme);
   }, [theme]);

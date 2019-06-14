@@ -45,10 +45,9 @@ $main: $lbry-teal-5;
   font-size: 0.7em;
   max-width: 10rem;
   min-width: 0;
-  transition: background-color var(--animation-duration) var(--animation-style);
 
   &:hover {
-    background-color: $main;
+    background-color: $lbry-teal-4;
     color: $lbry-white;
     svg {
       stroke: $lbry-white;
@@ -63,6 +62,10 @@ $main: $lbry-teal-5;
 .tag--remove {
   @extend .tag;
   max-width: 20rem;
+}
+
+.tag--add {
+  background-color: lighten($lbry-teal-5, 60%);
 }
 
 .tag__action-label {

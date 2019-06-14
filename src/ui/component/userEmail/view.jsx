@@ -43,7 +43,7 @@ function UserEmail(props: Props) {
               readOnly
               label={__('Your Email')}
               value={email}
-              inputButton={<Button button="primary" label={__('Change')} />}
+              inputButton={<Button button="inverse" label={__('Change')} />}
             />
           )}
           <p className="help">

@@ -62,9 +62,8 @@ class WalletAddress extends React.PureComponent<Props, State> {
         <div className="card__content">
           <div className="card__actions">
             <Button
-              button="primary"
+              button="inverse"
               label={__('Get New Address')}
-              icon={icons.REFRESH}
               onClick={getNewAddress}
               disabled={gettingNewAddress}
             />

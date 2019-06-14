@@ -86,7 +86,7 @@ const persistOptions = {
     'subscriptions',
     'app',
     'search',
-    'tags',
+    // 'tags',
   ],
   // Order is important. Needs to be compressed last or other transforms can't
   // read the data

@@ -22,7 +22,8 @@ const tagsAnimation = {
 
 export default function TagSelect(props: Props) {
   const { title, followedTags, showClose, doDeleteTag } = props;
-  const [hasClosed, setHasClosed] = usePersistedState('tag-select:has-closed', false);
+  // const [hasClosed, setHasClosed] = usePersistedState('tag-select:has-closed', false);
+  const [hasClosed, setHasClosed] = usePersistedState(null, false);
 
   function handleClose() {
     setHasClosed(true);

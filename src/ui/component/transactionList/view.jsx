@@ -58,7 +58,6 @@ class TransactionList extends React.PureComponent<Props> {
 
   render() {
     const { emptyMessage, rewards, transactions, slim, filterSetting, title, loading } = this.props;
-
     // The shorter "recent transactions" list shouldn't be filtered
     const transactionList = slim ? transactions : transactions.filter(this.filterTransaction);
 
@@ -83,8 +82,8 @@ class TransactionList extends React.PureComponent<Props> {
             </div>
           </h2>
         </header>
-        <header className="card__header table__header">
-          {!slim && !!transactions.length && (
+        {!slim && !!transactions.length && (
+          <header className="card__header table__header">
             <div className="card__actions card__actions--between">
               <FileExporter
                 data={transactionList}
@@ -118,8 +117,8 @@ class TransactionList extends React.PureComponent<Props> {
                 </FormField>
               </Form>
             </div>
-          )}
-        </header>
+          </header>
+        )}
 
         {!loading && !transactionList.length && (
           <p className="main--empty empty">{emptyMessage || __('No transactions.')}</p>

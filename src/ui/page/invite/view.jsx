@@ -27,7 +27,7 @@ class InvitePage extends React.PureComponent<Props> {
     const { isPending, isFailed } = this.props;
 
     return (
-      <Page>
+      <div className="">
         {isPending && <BusyIndicator message={__('Checking your invite status')} />}
         {!isPending && isFailed && <span className="empty">{__('Failed to retrieve invite status.')}</span>}
         {!isPending && !isFailed && (
@@ -36,7 +36,7 @@ class InvitePage extends React.PureComponent<Props> {
             <InviteList />
           </React.Fragment>
         )}
-      </Page>
+      </div>
     );
   }
 }

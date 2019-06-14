@@ -2,8 +2,9 @@
   position: absolute;
   min-height: 100vh;
   width: 100vw;
-  padding-top: var(--spacing-main-padding);
+  padding-top: var(--header-height);
   padding-left: var(--spacing-medium);
+  padding-right: var(--spacing-medium);
   background-color: mix($lbry-white, $lbry-gray-1, 70%);
   display: flex;
 
@@ -18,7 +19,7 @@
   width: 100%;
   margin-left: auto;
   margin-right: auto;
-  margin-top: var(--spacing-main-padding);
+  margin-top: var(--spacing-large);
   position: relative;
 }
 

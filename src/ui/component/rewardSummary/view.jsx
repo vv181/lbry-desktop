@@ -3,6 +3,7 @@ import * as React from 'react';
 import Button from 'component/button';
 import CreditAmount from 'component/common/credit-amount';
 import BusyIndicator from 'component/common/busy-indicator';
+import Yrbl from 'component/yrbl';
 
 type Props = {
   unclaimedRewardAmount: number,
@@ -51,7 +52,7 @@ class RewardSummary extends React.Component<Props> {
         <div className="card__content">
           <div className="card__actions">
             <Button
-              button="primary"
+              button="inverse"
               navigate="/$/rewards"
               label={hasRewards ? __('Claim Rewards') : __('View Rewards')}
             />

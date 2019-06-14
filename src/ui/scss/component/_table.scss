@@ -2,8 +2,6 @@
 
 table,
 .table {
-  padding-bottom: var(--spacing-large);
-
   [data-mode='dark'] & {
     background-color: transparent;
 
@@ -24,7 +22,8 @@ td {
 
 .table__header {
   margin: var(--spacing-large);
-  margin-bottom: var(--spacing-medium);
+  // margin-bottom: var(--spacing-lar);
+
   & + .table__header {
     margin-top: 0;
   }

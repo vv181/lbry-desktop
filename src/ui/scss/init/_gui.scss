@@ -4,7 +4,7 @@
 *,
 *::before,
 *::after {
-  -webkit-user-select: text;
+  -webkit-user-select: none;
 }
 
 html {
@@ -57,7 +57,7 @@ code {
     flex-basis: 0;
     flex-grow: 1;
 
-    &:not(:last-of-type) {
+    &:first-of-type {
       margin-right: 1.5rem;
     }
   }

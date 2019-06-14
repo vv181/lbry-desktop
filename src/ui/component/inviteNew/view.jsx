@@ -48,7 +48,7 @@ class FormInviteNew extends React.PureComponent<FormProps, FormState> {
           name="email"
           value={this.state.email}
           error={errorMessage}
-          inputButton={<Submit label="Invite" disabled={isPending} />}
+          inputButton={<Button button="inverse" type="submit" label="Invite" disabled={isPending} />}
           onChange={event => {
             this.handleEmailChanged(event);
           }}

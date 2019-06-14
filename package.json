@@ -40,6 +40,7 @@
     "postinstall": "electron-builder install-app-deps && node ./build/downloadDaemon.js"
   },
   "dependencies": {
+    "@reach/menu-button": "^0.1.18",
     "electron-dl": "^1.11.0",
     "electron-log": "^2.2.12",
     "electron-updater": "^4.0.6",

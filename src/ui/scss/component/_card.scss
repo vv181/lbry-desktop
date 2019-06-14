@@ -41,6 +41,15 @@
   color: $lbry-white;
   justify-content: space-between;
 }
+.card--reward-total {
+  background-repeat: no-repeat;
+  background-size: cover;
+  justify-content: space-between;
+  color: $lbry-white;
+  // filter: invert(100%);
+  // box-shadow: var(--card-box-shadow) lighten($lbry-black, 10%);
+  // color: darken($lbry-black, 20%);
+}
 
 .card--modal {
   box-shadow: none;
@@ -100,6 +109,7 @@
 
 .card__content--large {
   font-size: 3rem;
+  line-height: 1.5;
   font-weight: 700;
 }
 
@@ -178,8 +188,7 @@
   }
 
   [data-mode='dark'] & {
-    // TODO: dark
-    // background-color: darken($lbry-gray-5, 20%);
+    background-color: darken($lbry-gray-5, 20%);
   }
 }
 
