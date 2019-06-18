@@ -28,9 +28,9 @@ app.get('*', async(req, res) => {
       // const claimAuthor = claim.channel_name ? claim.channel_name : 'Anonymous';
       const claimDescription = claim.description && claim.description.length > 0 ? claim.description : 'Visit LBRY.tv for more content!';
       const claimLanguage = claim.language || 'en_US';
-      const claimThumnail = claim.thumbnail_url;
-      const claimTitle = `${claim.title} on LBRY.tv`; // `${claim.title} from ${claimAuthor} on LBRY.tv`;
-      const claimUrl = `https://beta.lbry.tv/${claim.name}/${claim.claim_id}`;
+      const claimThumnail = claim.thumbnail_url || '/og.png';
+      const claimTitle = `${claim.title} on LBRY.tv` || 'LBRY.tv'; // `${claim.title} from ${claimAuthor} on LBRY.tv`;
+      const claimUrl = `https://beta.lbry.tv/${claim.name}/${claim.claim_id}` || 'https://beta.lbry.tv';
       // This comment was inlined and preventing the rest of the script to load
       const indexHtml = readFileSync(path.join(__dirname, '/index.html'), 'utf8').replace(/\s\s/gm, '').replace(/>\s</gm, '><').replace('// Use relative path if we are in electron', '');
       let finalTags = '';
