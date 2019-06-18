@@ -20,7 +20,7 @@ app.get('*', async(req, res) => {
     .then(response => response.json())
     .then(claim => {
       if (!claim.success || !claim.data[0]) {
-        res.sendFile(path.join(__dirname, '/index.html'));
+        return path.join(__dirname, '/index.html');
       }
 
       claim = claim.data[0];
