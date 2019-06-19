@@ -1,24 +1,22 @@
 import React from 'react';
 import classnames from 'classnames';
+import WalletBalance from 'component/walletBalance';
 import RewardSummary from 'component/rewardSummary';
-import RewardTotal from 'component/rewardTotal';
+import TransactionListRecent from 'component/transactionListRecent';
+import WalletAddress from 'component/walletAddress';
 import Page from 'component/page';
 import UnsupportedOnWeb from 'component/common/unsupported-on-web';
-import UserEmail from 'component/userEmail';
-import InvitePage from 'page/invite';
+import WalletSend from 'component/walletSend';
 
 const WalletPage = () => (
   <Page>
     {IS_WEB && <UnsupportedOnWeb />}
     <div className={classnames({ 'card--disabled': IS_WEB })}>
       <div className="columns">
-        <UserEmail />
-        <div>
-          <RewardSummary />
-          <RewardTotal />
-        </div>
+        <WalletBalance />
+        <RewardSummary />
       </div>
-      <InvitePage />
+      <TransactionListRecent />
     </div>
   </Page>
 );

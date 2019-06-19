@@ -2,7 +2,14 @@
 
 import * as ACTIONS from 'constants/action_types';
 import * as MODALS from 'constants/modal_types';
+// @if TARGET='app'
+// $FlowFixMe
 import { remote } from 'electron';
+// @endif
+// @if TARGET='web'
+// $FlowFixMe
+import { remote } from 'web/stubs';
+// @endif
 
 // @if TARGET='app'
 const win = remote.BrowserWindow.getFocusedWindow();
@@ -36,6 +43,7 @@ export type AppState = {
   isUpgradeAvailable: ?boolean,
   isUpgradeSkipped: ?boolean,
   hasClickedComment: boolean,
+  enhancedLayout: boolean,
   searchOptionsExpanded: boolean,
 };
 
@@ -218,6 +226,11 @@ reducers[ACTIONS.HIDE_MODAL] = state =>
 reducers[ACTIONS.AUTHENTICATION_FAILURE] = state =>
   Object.assign({}, state, {
     modal: MODALS.AUTHENTICATION_FAILURE,
+  });
+
+reducers[ACTIONS.ENNNHHHAAANNNCEEE] = state =>
+  Object.assign({}, state, {
+    enhancedLayout: !state.enhancedLayout,
   });
 
 reducers[ACTIONS.TOGGLE_SEARCH_EXPANDED] = state =>

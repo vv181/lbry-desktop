@@ -19,9 +19,10 @@ type Props = {
   doOpenModal: (id: string) => void,
   showSnackBarOnSubscribe: boolean,
   doToast: ({ message: string }) => void,
+  buttonStyle: string,
 };
 
-export default function SubscribeButton(props: Props) {
+export default (props: Props) => {
   const {
     uri,
     doChannelSubscribe,
@@ -31,18 +32,19 @@ export default function SubscribeButton(props: Props) {
     isSubscribed,
     showSnackBarOnSubscribe,
     doToast,
+    buttonStyle,
   } = props;
 
   const subscriptionHandler = isSubscribed ? doChannelUnsubscribe : doChannelSubscribe;
-  const subscriptionLabel = isSubscribed ? __('Subscribed') : __('Subscribe');
+  const subscriptionLabel = isSubscribed ? __('Unsubscribe') : __('Subscribe');
 
   const { claimName } = parseURI(uri);
 
   return (
     <Button
       iconColor="red"
-      icon={ICONS.SUBSCRIPTION}
-      button={'alt'}
+      icon={isSubscribed ? ICONS.UNSUBSCRIBE : ICONS.SUBSCRIPTION}
+      button={buttonStyle || 'alt'}
       label={subscriptionLabel}
       onClick={e => {
         e.stopPropagation();
@@ -62,4 +64,4 @@ export default function SubscribeButton(props: Props) {
       }}
     />
   );
-}
+};

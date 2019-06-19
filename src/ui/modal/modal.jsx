@@ -3,6 +3,7 @@
 import * as React from 'react';
 import ReactModal from 'react-modal';
 import Button from 'component/button';
+import app from 'app';
 import classnames from 'classnames';
 
 type ModalProps = {
@@ -19,6 +20,7 @@ type ModalProps = {
   extraContent?: React.Node,
   expandButtonLabel?: string,
   hideButtonLabel?: string,
+  fullScreen: boolean,
   title?: string | React.Node,
 };
 
@@ -30,6 +32,7 @@ export class Modal extends React.PureComponent<ModalProps> {
     abortButtonLabel: __('Cancel'),
     confirmButtonDisabled: false,
     abortButtonDisabled: false,
+    fullScreen: false,
   };
 
   render() {
@@ -42,6 +45,7 @@ export class Modal extends React.PureComponent<ModalProps> {
       abortButtonLabel,
       abortButtonDisabled,
       onAborted,
+      fullScreen,
       className,
       title,
       ...modalProps
@@ -50,7 +54,10 @@ export class Modal extends React.PureComponent<ModalProps> {
       <ReactModal
         {...modalProps}
         onRequestClose={onAborted || onConfirmed}
-        className={classnames('card card--modal modal', className)}
+        className={classnames('card', className, {
+          modal: !fullScreen,
+          'modal--fullscreen': fullScreen,
+        })}
         overlayClassName="modal-overlay"
       >
         {title && (

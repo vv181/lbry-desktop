@@ -1,4 +1,5 @@
 // @flow
+import * as icons from 'constants/icons';
 import React from 'react';
 import Button from 'component/button';
 import CopyableText from 'component/copyableText';
@@ -26,7 +27,7 @@ class WalletAddress extends React.PureComponent<Props, State> {
     (this: any).toggleQR = this.toggleQR.bind(this);
   }
 
-  componentDidMount() {
+  componentWillMount() {
     const { checkAddressIsMine, receiveAddress, getNewAddress } = this.props;
     if (!receiveAddress) {
       getNewAddress();
@@ -61,8 +62,9 @@ class WalletAddress extends React.PureComponent<Props, State> {
         <div className="card__content">
           <div className="card__actions">
             <Button
-              button="inverse"
+              button="primary"
               label={__('Get New Address')}
+              icon={icons.REFRESH}
               onClick={getNewAddress}
               disabled={gettingNewAddress}
             />

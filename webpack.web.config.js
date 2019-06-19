@@ -38,9 +38,8 @@ const webConfig = {
   },
   resolve: {
     modules: [path.resolve(__dirname, 'src/platforms/')],
-
     alias: {
-      electron: path.resolve(__dirname, 'src/platforms/web/stubs'),
+      electron: path.resolve(__dirname, 'src/platforms/web/electron'),
     },
   },
   plugins: [

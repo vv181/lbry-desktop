@@ -5,7 +5,7 @@ import localForage from 'localforage';
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import { createHashHistory, createBrowserHistory } from 'history';
-import { routerMiddleware } from 'connected-react-router';
+import { connectRouter, routerMiddleware } from 'connected-react-router';
 import createRootReducer from './reducers';
 
 function isFunction(object) {
@@ -86,7 +86,6 @@ const persistOptions = {
     'subscriptions',
     'app',
     'search',
-    'tags',
   ],
   // Order is important. Needs to be compressed last or other transforms can't
   // read the data
@@ -100,7 +99,7 @@ const persistOptions = {
     searchFilter,
     compressor,
   ],
-  debounce: 5000,
+  debounce: IS_WEB ? 5000 : 10000,
   storage: localForage,
 };
 

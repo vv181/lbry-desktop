@@ -134,6 +134,14 @@ export default handleActions(
       ...state,
       loadingSuggested: false,
     }),
+    [ACTIONS.SUBSCRIPTION_FIRST_RUN_COMPLETED]: (state: SubscriptionState): SubscriptionState => ({
+      ...state,
+      firstRunCompleted: true,
+    }),
+    [ACTIONS.VIEW_SUGGESTED_SUBSCRIPTIONS]: (state: SubscriptionState): SubscriptionState => ({
+      ...state,
+      showSuggestedSubs: true,
+    }),
   },
   defaultState
 );

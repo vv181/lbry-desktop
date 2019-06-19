@@ -9,6 +9,7 @@ import {
   parseURI,
 } from 'lbry-redux';
 import { swapKeyAndValue } from 'util/swap-json';
+import { shuffleArray } from 'util/shuffleArray';
 
 // Returns the entire subscriptions state
 const selectState = state => state.subscriptions || {};
@@ -16,7 +17,7 @@ const selectState = state => state.subscriptions || {};
 // Returns the list of channel uris a user is subscribed to
 export const selectSubscriptions = createSelector(
   selectState,
-  state => state.subscriptions && state.subscriptions.sort((a, b) => a.channelName.localeCompare(b.channelName))
+  state => state.subscriptions
 );
 
 // Fetching list of users subscriptions
@@ -85,10 +86,13 @@ export const selectSuggestedChannels = createSelector(
       }
     });
 
-    return Object.keys(suggestedChannels).map(uri => ({
-      uri,
-      label: suggestedChannels[uri],
-    }));
+    return Object.keys(suggestedChannels)
+      .map(uri => ({
+        uri,
+        label: suggestedChannels[uri],
+      }))
+      .sort(shuffleArray)
+      .slice(0, 5);
   }
 );
 

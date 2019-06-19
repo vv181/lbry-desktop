@@ -6,7 +6,6 @@ import {
   selectSupportsByOutpoint,
   selectTransactionListFilter,
   doSetTransactionListFilter,
-  selectIsFetchingTransactions,
 } from 'lbry-redux';
 import TransactionList from './view';
 
@@ -15,7 +14,6 @@ const select = state => ({
   mySupports: selectSupportsByOutpoint(state),
   myClaims: selectAllMyClaimsByOutpoint(state),
   filterSetting: selectTransactionListFilter(state),
-  loading: selectIsFetchingTransactions(state),
 });
 
 const perform = dispatch => ({

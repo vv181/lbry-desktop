@@ -1,12 +1,16 @@
 // @flow
 import React from 'react';
-import UserEmail from 'component/userEmail';
+import BusyIndicator from 'component/common/busy-indicator';
+import Button from 'component/button';
+import UserEmailNew from 'component/userEmailNew';
+import UserEmailVerify from 'component/userEmailVerify';
 import UserVerify from 'component/userVerify';
 import Page from 'component/page';
 
 type Props = {
   isPending: boolean,
   email: string,
+  pathAfterAuth: string,
   location: UrlLocation,
   history: { push: string => void },
   user: ?{
@@ -17,12 +21,12 @@ type Props = {
 };
 
 class AuthPage extends React.PureComponent<Props> {
-  componentDidMount() {
+  componentWillMount() {
     this.navigateIfAuthenticated(this.props);
   }
 
-  componentDidUpdate() {
-    this.navigateIfAuthenticated(this.props);
+  componentWillReceiveProps(nextProps: Props) {
+    this.navigateIfAuthenticated(nextProps);
   }
 
   navigateIfAuthenticated = (props: Props) => {
@@ -36,9 +40,42 @@ class AuthPage extends React.PureComponent<Props> {
     }
   };
 
+  renderMain() {
+    const { email, isPending, user } = this.props;
+
+    if (isPending) {
+      return [<BusyIndicator message={__('Authenticating')} />, true];
+    } else if (user && !user.has_verified_email && !email) {
+      return [<UserEmailNew />, true];
+    } else if (user && !user.has_verified_email) {
+      return [<UserEmailVerify />, true];
+    } else if (user && !user.is_identity_verified) {
+      return [<UserVerify />, false];
+    }
+    return [<span className="empty">{__('No further steps.')}</span>, true];
+  }
+
   render() {
-    const { user, email } = this.props;
-    return <Page>{user && email && !user.is_identity_verified ? <UserVerify /> : <UserEmail />}</Page>;
+    const [innerContent, useTemplate] = this.renderMain();
+
+    return (
+      <Page>
+        {useTemplate ? (
+          <section className="card card--section">
+            {innerContent}
+
+            <p className="help">
+              {`${__(
+                'This information is disclosed only to LBRY, Inc. and not to the LBRY network. It is only required to earn LBRY rewards and may be used to sync usage data across devices.'
+              )} `}
+              <Button button="link" navigate="/" label={__('Return home.')} />
+            </p>
+          </section>
+        ) : (
+          innerContent
+        )}
+      </Page>
+    );
   }
 }
 

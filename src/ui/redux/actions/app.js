@@ -391,6 +391,12 @@ export function doConditionalAuthNavigate(newSession) {
   };
 }
 
+export function doToggleEnhancedLayout() {
+  return {
+    type: ACTIONS.ENNNHHHAAANNNCEEE,
+  };
+}
+
 export function doToggleSearchExpanded() {
   return {
     type: ACTIONS.TOGGLE_SEARCH_EXPANDED,

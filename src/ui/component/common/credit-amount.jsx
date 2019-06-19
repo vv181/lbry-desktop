@@ -10,6 +10,7 @@ type Props = {
   showFullPrice: boolean,
   showPlus: boolean,
   isEstimate?: boolean,
+  large?: boolean,
   showLBC?: boolean,
   fee?: boolean,
   badge?: boolean,
@@ -26,7 +27,7 @@ class CreditAmount extends React.PureComponent<Props> {
   };
 
   render() {
-    const { amount, precision, showFullPrice, showFree, showPlus, isEstimate, fee, showLBC, badge } = this.props;
+    const { amount, precision, showFullPrice, showFree, showPlus, large, isEstimate, fee, showLBC, badge } = this.props;
 
     const minimumRenderableAmount = 10 ** (-1 * precision);
     const fullPrice = formatFullPrice(amount, 2);
@@ -68,6 +69,7 @@ class CreditAmount extends React.PureComponent<Props> {
           badge,
           'badge--cost': badge && amount > 0,
           'badge--free': badge && isFree,
+          'badge--large': large,
         })}
       >
         {amountText}

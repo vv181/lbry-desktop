@@ -1,6 +1,6 @@
 // @flow
 import React, { Fragment } from 'react';
-import ClaimList from 'component/claimList';
+import FileList from 'component/fileList';
 import HiddenNsfwClaims from 'component/hiddenNsfwClaims';
 import { withRouter } from 'react-router-dom';
 import Paginate from 'component/common/paginate';
@@ -19,6 +19,7 @@ type Props = {
 function ChannelContent(props: Props) {
   const { uri, fetching, claimsInChannel, totalPages, channelIsMine, fetchClaims } = props;
   const hasContent = Boolean(claimsInChannel && claimsInChannel.length);
+
   return (
     <Fragment>
       {fetching && !hasContent && (
@@ -27,15 +28,11 @@ function ChannelContent(props: Props) {
         </section>
       )}
 
-      {!fetching && !hasContent && (
-        <div className="card--section">
-          <h2 className="card__content help">{__("This channel hasn't uploaded anything.")}</h2>
-        </div>
-      )}
+      {!fetching && !hasContent && <h2 className="empty">{__("This channel hasn't uploaded anything.")}</h2>}
 
       {!channelIsMine && <HiddenNsfwClaims className="card__content help" uri={uri} />}
 
-      {hasContent && <ClaimList header={false} uris={claimsInChannel.map(claim => claim.permanent_url)} />}
+      {hasContent && <FileList sortByHeight hideFilter fileInfos={claimsInChannel} />}
 
       <Paginate
         onPageChange={page => fetchClaims(uri, page)}

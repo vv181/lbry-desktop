@@ -1,54 +1,82 @@
 // @flow
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import Router from 'component/router/index';
 import ModalRouter from 'modal/modalRouter';
 import ReactModal from 'react-modal';
 import SideBar from 'component/sideBar';
 import Header from 'component/header';
 import { openContextMenu } from 'util/context-menu';
-import useKonamiListener from 'util/enhanced-layout';
+import EnhancedLayoutListener from 'util/enhanced-layout';
 import Yrbl from 'component/yrbl';
+
+const TWO_POINT_FIVE_MINUTES = 1000 * 60 * 2.5;
 
 type Props = {
   alertError: (string | {}) => void,
   pageTitle: ?string,
   language: string,
   theme: string,
-  fetchRewards: () => void,
-  fetchRewardedContent: () => void,
+  updateBlockHeight: () => void,
+  toggleEnhancedLayout: () => void,
+  enhancedLayout: boolean,
 };
 
-function App(props: Props) {
-  const { theme, fetchRewards, fetchRewardedContent } = props;
-  const appRef = useRef();
-  const isEnhancedLayout = useKonamiListener();
+class App extends React.PureComponent<Props> {
+  componentDidMount() {
+    const { updateBlockHeight, toggleEnhancedLayout, alertError, theme } = this.props;
 
-  useEffect(() => {
-    ReactModal.setAppElement(appRef.current);
-    fetchRewards();
-    fetchRewardedContent();
-  }, [fetchRewards, fetchRewardedContent]);
+    // TODO: create type for this object
+    // it lives in jsonrpc.js
+    document.addEventListener('unhandledError', (event: any) => {
+      alertError(event.detail);
+    });
 
-  useEffect(() => {
     // $FlowFixMe
     document.documentElement.setAttribute('data-mode', theme);
-  }, [theme]);
 
-  return (
-    <div ref={appRef} onContextMenu={e => openContextMenu(e)}>
-      <Header />
+    ReactModal.setAppElement('#window'); // fuck this
 
-      <div className="main-wrapper">
-        <div className="main-wrapper-inner">
+    this.enhance = new EnhancedLayoutListener(() => toggleEnhancedLayout());
+
+    updateBlockHeight();
+    setInterval(() => {
+      updateBlockHeight();
+    }, TWO_POINT_FIVE_MINUTES);
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    const { theme: prevTheme } = prevProps;
+    const { theme } = this.props;
+
+    if (prevTheme !== theme) {
+      // $FlowFixMe
+      document.documentElement.setAttribute('data-mode', theme);
+    }
+  }
+
+  componentWillUnmount() {
+    this.enhance = null;
+  }
+
+  enhance: ?any;
+
+  render() {
+    const { enhancedLayout } = this.props;
+
+    return (
+      <div id="window" onContextMenu={e => openContextMenu(e)}>
+        <Header />
+        <SideBar />
+
+        <div className="main-wrapper">
           <Router />
-          <SideBar />
         </div>
-      </div>
 
-      <ModalRouter />
-      {isEnhancedLayout && <Yrbl className="yrbl--enhanced" />}
-    </div>
-  );
+        <ModalRouter />
+        {enhancedLayout && <Yrbl className="yrbl--enhanced" />}
+      </div>
+    );
+  }
 }
 
 export default App;

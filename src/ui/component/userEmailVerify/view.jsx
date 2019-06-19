@@ -56,7 +56,7 @@ class UserEmailVerify extends React.PureComponent<Props> {
         </header>
 
         <div className="card__content">
-          <p className="card__subtitle">
+          <p>
             {__('An email was sent to')} {email}.{' '}
             {__('Follow the link and you will be good to go. This will update automatically.')}
           </p>

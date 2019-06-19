@@ -18,7 +18,7 @@ const RewardLink = (props: Props) => {
   const { reward, claimReward, label, isPending, button } = props;
   return !reward ? null : (
     <Button
-      button={button ? 'inverse' : 'link'}
+      button={button ? 'primary' : 'link'}
       disabled={isPending}
       label={isPending ? __('Claiming...') : label || `${__('Get')} ${reward.reward_amount} LBC`}
       onClick={() => {

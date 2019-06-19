@@ -4,12 +4,12 @@
   justify-content: center;
   vertical-align: middle;
   text-align: left;
-  margin-bottom: var(--spacing-xlarge);
+  margin-bottom: var(--spacing-vertical-xlarge);
 }
 
 .yrbl {
   height: 20rem;
-  margin-right: var(--spacing-large);
+  margin-right: var(--spacing-vertical-large);
 }
 
 .yrbl__content {
@@ -20,7 +20,7 @@
   align-self: center;
   height: 250px;
   width: auto;
-  margin: 0 var(--spacing-large);
+  margin: 0 var(--spacing-vertical-large);
 }
 
 .yrbl--search {

@@ -44,7 +44,7 @@ export default class CopyableText extends React.PureComponent<Props> {
         onFocus={this.onFocus}
         inputButton={
           <Button
-            button="inverse"
+            button="primary"
             icon={ICONS.CLIPBOARD}
             onClick={() => {
               clipboard.writeText(copyable);
