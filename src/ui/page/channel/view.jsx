@@ -6,7 +6,7 @@ import SubscribeButton from 'component/subscribeButton';
 import ShareButton from 'component/shareButton';
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from 'component/common/tabs';
 import { withRouter } from 'react-router';
-import { Form, FormField } from 'component/common/form';
+import { Form, FormField, Submit } from 'component/common/form';
 import Button from 'component/button';
 import { formatLbryUriForWeb } from 'util/uri';
 import ChannelContent from 'component/channelContent';
@@ -20,6 +20,7 @@ const ABOUT_PAGE = `about`;
 type Props = {
   uri: string,
   title: ?string,
+  amount: number,
   cover: ?string,
   thumbnail: ?string,
   page: number,
@@ -30,6 +31,11 @@ type Props = {
   description: string,
   website: string,
   email: string,
+  balance: number,
+  updateChannel: any => void,
+  tags: Array<string>,
+  locations: Array<string>,
+  languages: Array<string>,
 };
 
 function ChannelPage(props: Props) {
@@ -48,6 +54,8 @@ function ChannelPage(props: Props) {
     tags,
     locations,
     languages,
+    amount,
+    updateChannel,
   } = props;
   const { channelName, claimName, claimId } = parseURI(uri);
   const { search } = location;
@@ -57,18 +65,22 @@ function ChannelPage(props: Props) {
   const channelParams = {
     website: website,
     email: email,
-    languages: languages,
+    languages: languages || [],
     cover: cover,
     description: description,
-    locations: locations,
+    locations: locations || [],
     title: title,
     thumbnail: thumbnail,
-    tags: tags,
+    tags: tags || [],
     claim_id: claimId,
+    amount: amount,
   };
 
   const [params, setParams] = useState(channelParams);
   const [editing, setEditing] = useState(false);
+  const [bidError, setBidError] = useState('');
+
+  const MINIMUM_PUBLISH_BID = 0.00000001;
 
   // If a user changes tabs, update the url so it stays on the same page if they refresh.
   // We don't want to use links here because we can't animate the tab change and using links
@@ -85,6 +97,23 @@ function ChannelPage(props: Props) {
 
     history.push(`${url}${search}`);
   };
+
+  const handleBidChange = (bid: number) => {
+    const { balance, amount } = props;
+    const totalAvailableBidAmount = parseFloat(amount) + parseFloat(balance);
+    setParams({ ...params, amount: bid });
+    setBidError('');
+    if (bid <= 0.0 || isNaN(bid)) {
+      setBidError(__('Deposit cannot be 0'));
+    } else if (totalAvailableBidAmount === bid) {
+      setBidError(__('Please decrease your deposit to account for transaction fees'));
+    } else if (totalAvailableBidAmount < bid) {
+      setBidError(__('Deposit cannot be higher than your balance'));
+    } else if (bid <= MINIMUM_PUBLISH_BID) {
+      setBidError(__('Your deposit must be higher'));
+    }
+  };
+
   console.log('PARAMS', params);
   console.log(params.description);
   console.log('title', params.title);
@@ -95,7 +124,7 @@ function ChannelPage(props: Props) {
           {!editing && cover && <img className="channel-cover__custom" src={cover} />}
           {editing && <img className="channel-cover__custom" src={params.cover} />}
           {/* component that offers select/upload */}
-          <div className="channel__primary-info">
+          <div className="channel__primary-info ">
             {!editing && <ChannelThumbnail className="channel__thumbnail--channel-page" uri={uri} />}
             {editing && (
               <ChannelThumbnail
@@ -104,27 +133,15 @@ function ChannelPage(props: Props) {
                 thumbnailPreview={params.thumbnail}
               />
             )}
-
-            {/* component that offers select/upload */}
-            <div>
-              <h1 className="channel__title">{title || channelName}</h1>
-              <h2 className="channel__url">
-                {claimName}
-                {claimId && `#${claimId}`}
-              </h2>
-            </div>
-            <Button button="primary" onClick={() => setEditing(!editing)}>
-              EDIT
-            </Button>
-            {editing && (
-              <>
-                <Button button="primary" onClick={() => setParams({ ...channelParams })}>
-                  RESET
-                </Button>
-                <Button button="primary" onClick={() => setParams({ ...channelParams })}>
-                  UPDATE
-                </Button>
-              </>
+            <h1 className="channel__title">{title || channelName}</h1>
+            <h2 className="channel__url">
+              {claimName}
+              {claimId && `#${claimId}`}
+            </h2>
+            {channelIsMine && (
+              <Button button="primary" onClick={() => setEditing(!editing)}>
+                EDIT
+              </Button>
             )}
           </div>
         </header>
@@ -152,18 +169,33 @@ function ChannelPage(props: Props) {
         {editing && (
           <div className={'card--section'}>
             <section>
-              <Form onSubmit={() => {}}>
+              <div className={'card__title--flex-between'}>
+                <header className="card__header">
+                  <h2 className="card__title">{__('Edit')}</h2>
+                </header>
+                <div>
+                  <Button button="primary" onClick={() => setParams({ ...channelParams })}>
+                    RESET
+                  </Button>
+                  <Button button="primary" onClick={() => updateChannel(params)}>
+                    Submit
+                  </Button>
+                </div>
+              </div>
+              <Form onSubmit={channelParams => updateChannel(channelParams)}>
                 <div className="card__content">
                   <SelectAsset
                     onUpdate={e => setParams({ ...params, thumbnail: e.target.value })}
                     currentValue={params.thumbnail}
                     assetName={'Thumbnail'}
+                    recommended={'(400x400)'}
                   />
 
                   <SelectAsset
                     onUpdate={e => setParams({ ...params, cover: e.target.value })}
                     currentValue={params.cover}
                     assetName={'Cover'}
+                    recommended={'(1000x300)'}
                   />
 
                   <FormField
@@ -174,6 +206,27 @@ function ChannelPage(props: Props) {
                     disabled={false}
                     value={params.title}
                     onChange={e => setParams({ ...params, title: e.target.value })}
+                  />
+                  <FormField
+                    className="form-field--price-amount"
+                    type="number"
+                    name="content_bid"
+                    step="any"
+                    label={__('Deposit (LBC)')}
+                    postfix="LBC"
+                    value={params.amount}
+                    error={bidError}
+                    min="0.0"
+                    disabled={false}
+                    onChange={event => handleBidChange(parseFloat(event.target.value))}
+                    placeholder={0.1}
+                    // helper={
+                    //   <BidHelpText
+                    //     uri={shortUri}
+                    //     isResolvingUri={isResolvingUri}
+                    //     amountNeededForTakeover={amountNeededForTakeover}
+                    //   />
+                    // }
                   />
 
                   <FormField
@@ -205,6 +258,7 @@ function ChannelPage(props: Props) {
                     disabled={false}
                     onChange={text => setParams({ ...params, description: text })}
                   />
+                  <Submit className={'primary'} label={'Submit'} disabled={false} />
                 </div>
               </Form>
             </section>

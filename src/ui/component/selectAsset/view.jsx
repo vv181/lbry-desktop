@@ -1,29 +1,33 @@
 // @flow
-import * as MODALS from 'constants/modal_types';
-import { THUMBNAIL_STATUSES } from 'lbry-redux';
-import getMediaType from 'util/get-media-type';
+
 import React, { useState } from 'react';
 import { FormField } from 'component/common/form';
 import FileSelector from 'component/common/file-selector';
 import Button from 'component/button';
-import ThumbnailMissingImage from './thumbnail-missing.png';
-import ThumbnailBrokenImage from './thumbnail-broken.png';
+
+// The following deps are for speech uploader
+// import * as MODALS from 'constants/modal_types';
+// import { THUMBNAIL_STATUSES } from 'lbry-redux';
+// import getMediaType from 'util/get-media-type';
+// import ThumbnailMissingImage from './thumbnail-missing.png';
+// import ThumbnailBrokenImage from './thumbnail-broken.png';
+
+// const filters = [
+//   {
+//     name: __('Thumbnail Image'),
+//     extensions: ['png', 'jpg', 'jpeg', 'gif'],
+//   },
+// ];
 
 type Props = {
   assetName: string,
   currentValue: ?string,
   onUpdate: () => void,
+  recommended: string,
 };
 
-const filters = [
-  {
-    name: __('Thumbnail Image'),
-    extensions: ['png', 'jpg', 'jpeg', 'gif'],
-  },
-];
-
 function SelectAsset(props: Props) {
-  const { onUpdate, assetName, currentValue } = props;
+  const { onUpdate, assetName, currentValue, recommended } = props;
   const [assetSource, setAssetSource] = useState('url');
 
   return (
@@ -55,8 +59,8 @@ function SelectAsset(props: Props) {
             <FormField
               type={'text'}
               name={'thumbnail'}
-              label={__(assetName)}
-              placeholder={__('Titular Title')}
+              label={__(assetName + ' ' + recommended)}
+              placeholder={__('https://example.com/image.png')}
               disabled={false}
               value={currentValue}
               onChange={e => {
