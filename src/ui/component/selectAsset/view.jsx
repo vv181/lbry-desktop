@@ -4,21 +4,20 @@ import React, { useState } from 'react';
 import { FormField } from 'component/common/form';
 import FileSelector from 'component/common/file-selector';
 import Button from 'component/button';
+import fs from 'fs';
+import path from 'path';
 
-// The following deps are for speech uploader
-// import * as MODALS from 'constants/modal_types';
-// import { THUMBNAIL_STATUSES } from 'lbry-redux';
-// import getMediaType from 'util/get-media-type';
-// import ThumbnailMissingImage from './thumbnail-missing.png';
-// import ThumbnailBrokenImage from './thumbnail-broken.png';
+const filters = [
+  {
+    name: __('Thumbnail Image'),
+    extensions: ['png', 'jpg', 'jpeg', 'gif'],
+  },
+];
 
-// const filters = [
-//   {
-//     name: __('Thumbnail Image'),
-//     extensions: ['png', 'jpg', 'jpeg', 'gif'],
-//   },
-// ];
-
+const SOURCE_URL = 'url';
+const SOURCE_UPLOAD = 'upload';
+const SPEECH_READY = 'READY';
+const SPEECH_UPLOADING = 'UPLOADING';
 type Props = {
   assetName: string,
   currentValue: ?string,
@@ -28,13 +27,65 @@ type Props = {
 
 function SelectAsset(props: Props) {
   const { onUpdate, assetName, currentValue, recommended } = props;
-  const [assetSource, setAssetSource] = useState('url');
+  const [assetSource, setAssetSource] = useState(SOURCE_URL);
+  const [pathSelected, setPathSelected] = useState('');
+  const [uploadStatus, setUploadStatus] = useState(SPEECH_READY);
 
+  function doUploadAsset(filePath, thumbnailBuffer) {
+    let thumbnail, fileExt, fileName, fileType;
+    console.log('doUpload');
+    if (filePath) {
+      thumbnail = fs.readFileSync(filePath);
+      fileExt = path.extname(filePath);
+      fileName = path.basename(filePath);
+      fileType = `image/${fileExt.slice(1)}`;
+    } else if (thumbnailBuffer) {
+      thumbnail = thumbnailBuffer;
+      fileExt = '.png';
+      fileName = 'thumbnail.png';
+      fileType = 'image/png';
+    } else {
+      return null;
+    }
+
+    const makeid = () => {
+      let text = '';
+      const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      for (let i = 0; i < 24; i += 1) text += possible.charAt(Math.floor(Math.random() * 62));
+      return text;
+    };
+
+    const uploadError = (error = '') => {
+      console.log('error', error);
+    };
+
+    const setUrl = path => {
+      console.log('set');
+      setUploadStatus(SPEECH_READY);
+      onUpdate(path);
+      setAssetSource(SOURCE_URL);
+    };
+
+    setUploadStatus(SPEECH_UPLOADING);
+
+    const data = new FormData();
+    const name = makeid();
+    const file = new File([thumbnail], fileName, { type: fileType });
+    data.append('name', name);
+    data.append('file', file);
+
+    return fetch('https://spee.ch/api/claim/publish', {
+      method: 'POST',
+      body: data,
+    })
+      .then(response => response.json())
+      .then(json => (json.success ? setUrl(`${json.data.serveUrl}`) : uploadError(json.message)))
+      .catch(err => uploadError(err.message));
+  }
   return (
     <fieldset-section>
       <fieldset-group className="fieldset-group--smushed">
         <FormField
-          className="file-list__dropdown"
           type="select"
           name={assetName}
           value={assetSource}
@@ -48,13 +99,37 @@ function SelectAsset(props: Props) {
             UPLOAD
           </option>
         </FormField>
-        {assetSource === 'upload' && (
+        {assetSource === SOURCE_UPLOAD && (
           <>
-            <FileSelector />
-            <Button button="primary">Publish</Button>
+            {!pathSelected && (
+              <FileSelector
+                label={'File to upload'}
+                name={'assetSelector'}
+                onFileChosen={path => {
+                  setPathSelected(path);
+                }}
+                filters={filters}
+              />
+            )}
+            {pathSelected && (
+              <div>
+                {`...${pathSelected.slice(-18)}`} {uploadStatus}{' '}
+                <Button button={'primary'} onClick={() => doUploadAsset(pathSelected)}>
+                  Upload
+                </Button>{' '}
+                <Button
+                  button={'secondary'}
+                  onClick={() => {
+                    setPathSelected('');
+                  }}
+                >
+                  Clear
+                </Button>
+              </div>
+            )}
           </>
         )}
-        {assetSource === 'url' && (
+        {assetSource === SOURCE_URL && (
           <>
             <FormField
               type={'text'}
@@ -64,7 +139,7 @@ function SelectAsset(props: Props) {
               disabled={false}
               value={currentValue}
               onChange={e => {
-                onUpdate(e);
+                onUpdate(e.target.value);
               }}
             />
           </>

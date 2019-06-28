@@ -6,13 +6,14 @@ import SubscribeButton from 'component/subscribeButton';
 import ShareButton from 'component/shareButton';
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from 'component/common/tabs';
 import { withRouter } from 'react-router';
-import { Form, FormField, Submit } from 'component/common/form';
+import { Form, FormField } from 'component/common/form';
 import Button from 'component/button';
 import { formatLbryUriForWeb } from 'util/uri';
 import ChannelContent from 'component/channelContent';
 import ChannelAbout from 'component/channelAbout';
 import ChannelThumbnail from 'component/channelThumbnail';
 import SelectAsset from '../../component/selectAsset/view';
+import * as ICONS from 'constants/icons';
 
 const PAGE_VIEW_QUERY = `view`;
 const ABOUT_PAGE = `about`;
@@ -133,16 +134,16 @@ function ChannelPage(props: Props) {
                 thumbnailPreview={params.thumbnail}
               />
             )}
-            <h1 className="channel__title">{title || channelName}</h1>
+            <h1 className="channel__title">
+              {title || channelName}
+              {channelIsMine && !editing && (
+                <Button onClick={() => setEditing(!editing)} icon={ICONS.EDIT} iconSize={49} />
+              )}
+            </h1>
             <h2 className="channel__url">
               {claimName}
               {claimId && `#${claimId}`}
             </h2>
-            {channelIsMine && (
-              <Button button="primary" onClick={() => setEditing(!editing)}>
-                EDIT
-              </Button>
-            )}
           </div>
         </header>
         {!editing && (
@@ -174,25 +175,29 @@ function ChannelPage(props: Props) {
                   <h2 className="card__title">{__('Edit')}</h2>
                 </header>
                 <div>
-                  <Button button="primary" onClick={() => setParams({ ...channelParams })}>
-                    RESET
-                  </Button>
-                  <Button button="primary" onClick={() => updateChannel(params)}>
-                    Submit
-                  </Button>
+                  <Button button="primary" label={__('Submit')} onClick={() => updateChannel(params)} />
+
+                  <Button
+                    button="link"
+                    label={__('Cancel')}
+                    onClick={() => {
+                      setParams({ ...channelParams });
+                      setEditing(!editing);
+                    }}
+                  />
                 </div>
               </div>
               <Form onSubmit={channelParams => updateChannel(channelParams)}>
                 <div className="card__content">
                   <SelectAsset
-                    onUpdate={e => setParams({ ...params, thumbnail: e.target.value })}
+                    onUpdate={v => setParams({ ...params, thumbnail: v })}
                     currentValue={params.thumbnail}
                     assetName={'Thumbnail'}
                     recommended={'(400x400)'}
                   />
 
                   <SelectAsset
-                    onUpdate={e => setParams({ ...params, cover: e.target.value })}
+                    onUpdate={v => setParams({ ...params, cover: v })}
                     currentValue={params.cover}
                     assetName={'Cover'}
                     recommended={'(1000x300)'}
@@ -258,7 +263,10 @@ function ChannelPage(props: Props) {
                     disabled={false}
                     onChange={text => setParams({ ...params, description: text })}
                   />
-                  <Submit className={'primary'} label={'Submit'} disabled={false} />
+                  <div>
+                    <Button button="primary" label={__('Submit')} onClick={() => updateChannel(params)} />
+                    <Button button="link" label={__('Cancel')} onClick={() => setParams({ ...channelParams })} />
+                  </div>
                 </div>
               </Form>
             </section>
