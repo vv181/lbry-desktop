@@ -477,5 +477,18 @@
   "Tag Search": "Tag Search",
   "This": "This",
   "Today": "Today",
-  "All time": "All time"
+  "All time": "All time",
+  "Filter": "Filter",
+  "files": "files",
+  "hidden due to your": "hidden due to your",
+  "content viewing preferences": "content viewing preferences",
+  "Mature": "Mature",
+  "Unfollow": "Unfollow",
+  "Subscriptions 101": "Subscriptions 101",
+  "You just subscribed to your first channel. Awesome!": "You just subscribed to your first channel. Awesome!",
+  "A few quick things to know:": "A few quick things to know:",
+  "1) This app will automatically download new free content from channels you are subscribed to. You may configure this in Settings or on the Subscriptions page.": "1) This app will automatically download new free content from channels you are subscribed to. You may configure this in Settings or on the Subscriptions page.",
+  "2) If we have your email address, we will send you notifications related to new content. You may configure these emails from the Help page.": "2) If we have your email address, we will send you notifications related to new content. You may configure these emails from the Help page.",
+  "Got it": "Got it",
+  "This will appear as a tip for \"Sniper wolf\".": "This will appear as a tip for \"Sniper wolf\"."
 }
