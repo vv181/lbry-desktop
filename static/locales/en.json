@@ -490,5 +490,14 @@
   "1) This app will automatically download new free content from channels you are subscribed to. You may configure this in Settings or on the Subscriptions page.": "1) This app will automatically download new free content from channels you are subscribed to. You may configure this in Settings or on the Subscriptions page.",
   "2) If we have your email address, we will send you notifications related to new content. You may configure these emails from the Help page.": "2) If we have your email address, we will send you notifications related to new content. You may configure these emails from the Help page.",
   "Got it": "Got it",
-  "This will appear as a tip for \"Sniper wolf\".": "This will appear as a tip for \"Sniper wolf\"."
+  "This will appear as a tip for \"Sniper wolf\".": "This will appear as a tip for \"Sniper wolf\".",
+  "Got it!": "Got it!",
+  "Waiting for stream.": "Waiting for stream.",
+  "Data Settings": "Data Settings",
+  "Enables saving of all content to your downloads directory": "Enables saving of all content to your downloads directory",
+  "This is not retroactive, only works from the time it was changed": "This is not retroactive, only works from the time it was changed",
+  "Enables saving of hosting data": "Enables saving of hosting data",
+  "See FAQ on how to make sure you are hosting": "See FAQ on how to make sure you are hosting",
+  "Network and Data Settings": "Network and Data Settings",
+  "Max Connections": "Max Connections"
 }

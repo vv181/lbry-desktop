@@ -18,14 +18,7 @@ const SPACE_BAR_KEYCODE = 32;
 
 type Props = {
   cancelPlay: () => void,
-  fileInfo: {
-    outpoint: string,
-    file_name: string,
-    written_bytes: number,
-    download_path: string,
-    completed: boolean,
-    blobs_completed: number,
-  },
+  fileInfo: FileListItem,
   fileInfoErrors: ?{
     [string]: boolean,
   },
@@ -148,7 +141,7 @@ class FileViewer extends React.PureComponent<Props> {
 
     if (playable && costInfo && costInfo.cost === 0 && !fileInfo && !isDownloading) {
       this.playContent();
-    } else if (playable && fileInfo && fileInfo.download_path && fileInfo.written_bytes > 0) {
+    } else if (playable && fileInfo && ((fileInfo.download_path && fileInfo.written_bytes > 0) || (fileInfo.blobs_completed === 0 && fileInfo.status === 'running'))) {
       this.playContent();
     }
   };
@@ -241,7 +234,7 @@ class FileViewer extends React.PureComponent<Props> {
     const isPlaying = playingUri === uri;
     let isReadyToPlay = false;
     // @if TARGET='app'
-    isReadyToPlay = fileInfo && fileInfo.download_path && fileInfo.written_bytes > 0;
+    isReadyToPlay = fileInfo && ((fileInfo.download_path && fileInfo.written_bytes > 0) || (fileInfo.blobs_completed === 0 && fileInfo.status === 'running'));
     // @endif
     // @if TARGET='web'
     // try to play immediately on web, we don't need to call file_list since we are streaming from reflector
@@ -285,14 +278,10 @@ class FileViewer extends React.PureComponent<Props> {
                   mediaType={mediaType}
                   contentType={contentType}
                   downloadCompleted={fileInfo.completed}
-                  changeVolume={changeVolume}
-                  volume={volume}
-                  savePosition={newPosition => savePosition(claim.claim_id, `${claim.txid}:${claim.nout}`, newPosition)}
+                  fileStatus={fileInfo.status}
+                  streamingUrl={fileInfo.streaming_url}
                   claim={claim}
                   uri={uri}
-                  position={position}
-                  onStartCb={this.onFileStartCb}
-                  onFinishCb={this.onFileFinishCb}
                   playingUri={playingUri}
                   searchBarFocused={searchBarFocused}
                   viewerContainer={viewerContainer}

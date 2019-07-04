@@ -67,11 +67,12 @@ type Props = {
   claim: StreamClaim,
   source: {
     stream: string => void,
-    fileName: string,
     fileType: string,
     contentType: string,
     downloadPath: string,
+    downloadCompleted: boolean,
     url: ?string,
+    status: string,
   },
   currentTheme: string,
 };
@@ -144,7 +145,7 @@ class FileRender extends React.PureComponent<Props> {
     const { source, mediaType, currentTheme, poster, claim } = this.props;
 
     // Extract relevant data to render file
-    const { stream, fileType, contentType, downloadPath, fileName } = source;
+    const { stream, url, fileType, contentType, downloadPath, downloadCompleted, status, fileName } = source;
 
     // Human-readable files (scripts and plain-text files)
     const readableFiles = ['text', 'document', 'script'];
@@ -170,7 +171,7 @@ class FileRender extends React.PureComponent<Props> {
         />
       ),
       video: (
-        <VideoViewer claim={claim} source={{ downloadPath, fileName }} contentType={contentType} poster={poster} />
+        <VideoViewer claim={claim} source={{ stream, url, downloadPath, downloadCompleted, status }} contentType={contentType} poster={poster} />
       ),
       // audio: <AudioViewer claim={claim} source={{ downloadPath, fileName }} contentType={contentType} />,
       // Add routes to viewer...

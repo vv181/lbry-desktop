@@ -20,6 +20,9 @@ type DaemonSettings = {
   download_dir: string,
   share_usage_data: boolean,
   max_key_fee?: Price,
+  max_connections_per_download?: number,
+  save_files: boolean,
+  save_blobs: boolean,
 };
 
 type Props = {
@@ -48,17 +51,22 @@ type Props = {
 
 type State = {
   clearingCache: boolean,
+  connectionOptions: Array<number>,
+  maxConnections: number,
 };
 
 class SettingsPage extends React.PureComponent<Props, State> {
+
+
   constructor(props: Props) {
     super(props);
-
     this.state = {
       clearingCache: false,
+      maxConnections: this.props.daemonSettings && this.props.daemonSettings.max_connections_per_download,
     };
 
     (this: any).onKeyFeeChange = this.onKeyFeeChange.bind(this);
+    (this: any).onMaxConnectionsChange = this.onMaxConnectionsChange.bind(this);
     (this: any).onKeyFeeDisableChange = this.onKeyFeeDisableChange.bind(this);
     (this: any).onInstantPurchaseMaxChange = this.onInstantPurchaseMaxChange.bind(this);
     (this: any).onThemeChange = this.onThemeChange.bind(this);
@@ -74,6 +82,13 @@ class SettingsPage extends React.PureComponent<Props, State> {
 
   onKeyFeeChange(newValue: Price) {
     this.setDaemonSetting('max_key_fee', newValue);
+  }
+
+  onMaxConnectionsChange(newValue: number) {
+    this.setState({
+      maxConnections: newValue,
+    });
+    this.setDaemonSetting('max_connections_per_download', newValue);
   }
 
   onKeyFeeDisableChange(isDisabled: boolean) {
@@ -157,6 +172,7 @@ class SettingsPage extends React.PureComponent<Props, State> {
 
     const defaultMaxKeyFee = { currency: 'USD', amount: 50 };
     const disableMaxKeyFee = !(daemonSettings && daemonSettings.max_key_fee);
+    const connectionOptions = [1,4,6,10,20];
 
     return (
       <Page>
@@ -184,6 +200,55 @@ class SettingsPage extends React.PureComponent<Props, State> {
                   <p className="help">{__('LBRY downloads will be saved here.')}</p>
                 </Form>
               </div>
+            </section>
+
+            <section className="card card--section">
+              <header className="card__header">
+                <h2 className="card__title">{__('Network and Data Settings')}</h2>
+              </header>
+
+              <Form className="card__content">
+                <FormField
+                  type="setting"
+                  name="save_files"
+                  onChange={() => setDaemonSetting('save_files', !daemonSettings.save_files)}
+                  checked={daemonSettings.save_files}
+                  label={__('Enables saving of all content to your downloads directory')}
+                  helper={__('This is not retroactive, only works from the time it was changed')}
+                />
+              </Form>
+              <Form className="card__content">
+              <FormField
+                type="setting"
+                name="save_blobs"
+                onChange={() => setDaemonSetting('save_blobs', !daemonSettings.save_blobs)}
+                checked={daemonSettings.save_blobs}
+                label={__('Enables saving of hosting data')}
+                helper={__('See FAQ on how to make sure you are hosting')}
+              />
+            </Form>
+            <Form className="card__content">
+              <fieldset-section>
+                <FormField
+                  name="connections_select"
+                  type="select"
+                  label={__('Max Connections')}
+                  min={1}
+                  max={50}
+                  value={this.maxConnections}
+                  onChange={() => {
+                    this.onMaxConnectionsChange(maxConnections);
+                  }}
+                >
+                  {connectionOptions.map(connectionOption => (
+                    <option key={connectionOption} value={connectionOption}>
+                      {connectionOption}
+                    </option>
+                  ))}
+                </FormField>
+              </fieldset-section>
+              </Form>
+
             </section>
 
             <section className="card card--section">
