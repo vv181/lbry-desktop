@@ -22,6 +22,11 @@ import NavigationHistory from 'page/navigationHistory';
 import TagsPage from 'page/tags';
 import FollowingPage from 'page/following';
 
+if ('scrollRestoration' in history) {
+  // Back off, browser, I got this...
+  history.scrollRestoration = 'manual';
+}
+
 const Scroll = withRouter(function ScrollWrapper(props) {
   const { pathname } = props.location;
 
@@ -29,7 +34,16 @@ const Scroll = withRouter(function ScrollWrapper(props) {
     // Auto scroll to the top of a window for new pages
     // The browser will handle scrolling if it needs to, but
     // for new pages, react-router maintains the current y scroll position
-    window.scrollTo(0, 0);
+    // window.scrollTo(0, 0);
+    function handleScroll(e) {
+      console.log(e);
+    }
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, [pathname]);
 
   return props.children;

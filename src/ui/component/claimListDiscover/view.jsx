@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import usePersistedState from 'util/use-persisted-state';
 import { MATURE_TAGS } from 'lbry-redux';
+import { withRouter } from 'react-router';
 import { FormField } from 'component/common/form';
 import ClaimList from 'component/claimList';
 import Tag from 'component/tag';
@@ -40,11 +41,26 @@ type Props = {
 };
 
 function ClaimListDiscover(props: Props) {
-  const { doClaimSearch, uris, tags, loading, personal, injectedItem, meta, subscribedChannels, showNsfw } = props;
-  const [personalSort, setPersonalSort] = usePersistedState('claim-list-discover:personalSort', SEARCH_SORT_YOU);
-  const [typeSort, setTypeSort] = usePersistedState('claim-list-discover:typeSort', TYPE_TRENDING);
-  const [timeSort, setTimeSort] = usePersistedState('claim-list-discover:timeSort', TIME_WEEK);
-  const [page, setPage] = useState(1);
+  const {
+    history,
+    location,
+    doClaimSearch,
+    uris,
+    tags,
+    loading,
+    personalView,
+    injectedItem,
+    meta,
+    subscribedChannels,
+    showNsfw,
+  } = props;
+
+  const { search, pathname } = location;
+  const urlParams = new URLSearchParams(search);
+  const personalSort = urlParams.get('sort') || SEARCH_SORT_YOU;
+  const typeSort = urlParams.get('type') || TYPE_TRENDING;
+  const timeSort = urlParams.get('time') || TIME_WEEK;
+  const count = urlParams.get('count') || PAGE_SIZE;
 
   const toCapitalCase = string => string.charAt(0).toUpperCase() + string.slice(1);
   const tagsString = tags.join(',');
@@ -57,11 +73,12 @@ function ClaimListDiscover(props: Props) {
       channel_ids?: Array<string>,
       release_time?: string,
       not_tags?: Array<string>,
-    } = { page_size: PAGE_SIZE, page };
+    } = { page_size: PAGE_SIZE, page: count / PAGE_SIZE };
+
     const newTags = tagsString.split(',');
     const newChannelIds = channelsIdString.split(',');
 
-    if ((newTags && !personal) || (newTags && personal && personalSort === SEARCH_SORT_YOU)) {
+    if ((newTags && !personalView) || (newTags && personalView && personalSort === SEARCH_SORT_YOU)) {
       options.any_tags = newTags;
     } else if (personalSort === SEARCH_SORT_CHANNELS) {
       options.channel_ids = newChannelIds;
@@ -88,7 +105,7 @@ function ClaimListDiscover(props: Props) {
     }
 
     doClaimSearch(20, options);
-  }, [personal, personalSort, typeSort, timeSort, doClaimSearch, page, tagsString, channelsIdString, showNsfw]);
+  }, [personalView, personalSort, typeSort, timeSort, doClaimSearch, tagsString, channelsIdString, count, showNsfw]);
 
   function getLabel(type) {
     if (type === SEARCH_SORT_ALL) {
@@ -98,6 +115,22 @@ function ClaimListDiscover(props: Props) {
     return type === SEARCH_SORT_YOU ? __('Tags You Follow') : __('Channels You Follow');
   }
 
+  function handleTypeSort(newTypeSort) {
+    history.push(`?type=${newTypeSort}&sort=${personalSort}&time=${timeSort}`);
+  }
+
+  function handlePersonalSort(newPersonalSort) {
+    history.push(`?type=${personalSort}&sort=${newPersonalSort}&time=${timeSort}`);
+  }
+
+  function handleTimeSort(newTimeSort) {
+    history.push(`?type=${typeSort}&sort=${personalSort}&time=${newTimeSort}`);
+  }
+
+  function handleScrollBottom() {
+    history.replace(`?type=${typeSort}&sort=${personalSort}&time=${timeSort}&count=${count + PAGE_SIZE}`);
+  }
+
   const header = (
     <h1 className="card__title--flex">
       <FormField
@@ -105,7 +138,7 @@ function ClaimListDiscover(props: Props) {
         type="select"
         name="trending_sort"
         value={typeSort}
-        onChange={e => setTypeSort(e.target.value)}
+        onChange={e => handleTypeSort(e.target.value)}
       >
         {SEARCH_TYPES.map(type => (
           <option key={type} value={type}>
@@ -114,7 +147,7 @@ function ClaimListDiscover(props: Props) {
         ))}
       </FormField>
       <span>{__('For')}</span>
-      {!personal && tags && tags.length ? (
+      {!personalView && tags && tags.length ? (
         tags.map(tag => <Tag key={tag} name={tag} disabled />)
       ) : (
         <FormField
@@ -123,8 +156,7 @@ function ClaimListDiscover(props: Props) {
           className="claim-list__dropdown"
           value={personalSort}
           onChange={e => {
-            setPage(1);
-            setPersonalSort(e.target.value);
+            handlePersonalSort(e.target.value);
           }}
         >
           {SEARCH_FILTER_TYPES.map(type => (
@@ -140,7 +172,7 @@ function ClaimListDiscover(props: Props) {
           type="select"
           name="trending_time"
           value={timeSort}
-          onChange={e => setTimeSort(e.target.value)}
+          onChange={e => handleTimeSort(e.target.value)}
         >
           {SEARCH_TIMES.map(time => (
             <option key={time} value={time}>
@@ -157,20 +189,21 @@ function ClaimListDiscover(props: Props) {
 
   return (
     <div className="card">
+      {window.location.href}
       <ClaimList
         loading={loading}
         uris={uris}
         injectedItem={personalSort === SEARCH_SORT_YOU && injectedItem}
         header={header}
         headerAltControls={meta}
-        onScrollBottom={() => setPage(page + 1)}
-        page={page}
+        onScrollBottom={handleScrollBottom}
+        page={PAGE_SIZE / count}
         pageSize={PAGE_SIZE}
       />
 
-      {loading && page > 1 && new Array(PAGE_SIZE).fill(1).map((x, i) => <ClaimPreview key={i} placeholder />)}
+      {loading && count > PAGE_SIZE && new Array(PAGE_SIZE).fill(1).map((x, i) => <ClaimPreview key={i} placeholder />)}
     </div>
   );
 }
 
-export default ClaimListDiscover;
+export default withRouter(ClaimListDiscover);
