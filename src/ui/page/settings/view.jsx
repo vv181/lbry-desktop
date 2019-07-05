@@ -47,22 +47,19 @@ type Props = {
   updateWalletStatus: () => void,
   walletEncrypted: boolean,
   osNotificationsEnabled: boolean,
+  maxConnections: number,
 };
 
 type State = {
   clearingCache: boolean,
-  connectionOptions: Array<number>,
-  maxConnections: number,
 };
 
 class SettingsPage extends React.PureComponent<Props, State> {
-
-
   constructor(props: Props) {
     super(props);
+
     this.state = {
       clearingCache: false,
-      maxConnections: this.props.daemonSettings && this.props.daemonSettings.max_connections_per_download,
     };
 
     (this: any).onKeyFeeChange = this.onKeyFeeChange.bind(this);
@@ -78,17 +75,19 @@ class SettingsPage extends React.PureComponent<Props, State> {
   componentDidMount() {
     this.props.getThemes();
     this.props.updateWalletStatus();
+
+    const { daemonSettings } = this.props;
+    this.props.setClientSetting(SETTINGS.MAX_CONNECTIONS, daemonSettings.max_connections_per_download);
   }
 
   onKeyFeeChange(newValue: Price) {
     this.setDaemonSetting('max_key_fee', newValue);
   }
 
-  onMaxConnectionsChange(newValue: number) {
-    this.setState({
-      maxConnections: newValue,
-    });
-    this.setDaemonSetting('max_connections_per_download', newValue);
+  onMaxConnectionsChange(event: SyntheticInputEvent<*>) {
+    const { value } = event.target;
+    this.setDaemonSetting('max_connections_per_download', value);
+    this.props.setClientSetting(SETTINGS.MAX_CONNECTIONS, value);
   }
 
   onKeyFeeDisableChange(isDisabled: boolean) {
@@ -165,14 +164,16 @@ class SettingsPage extends React.PureComponent<Props, State> {
       autoDownload,
       setDaemonSetting,
       setClientSetting,
+      maxConnections,
     } = this.props;
 
     const noDaemonSettings = !daemonSettings || Object.keys(daemonSettings).length === 0;
     const isDarkModeEnabled = currentTheme === 'dark';
 
     const defaultMaxKeyFee = { currency: 'USD', amount: 50 };
+
     const disableMaxKeyFee = !(daemonSettings && daemonSettings.max_key_fee);
-    const connectionOptions = [1,4,6,10,20];
+    const connectionOptions = [1, 4, 6, 10, 20];
 
     return (
       <Page>
@@ -218,37 +219,34 @@ class SettingsPage extends React.PureComponent<Props, State> {
                 />
               </Form>
               <Form className="card__content">
-              <FormField
-                type="setting"
-                name="save_blobs"
-                onChange={() => setDaemonSetting('save_blobs', !daemonSettings.save_blobs)}
-                checked={daemonSettings.save_blobs}
-                label={__('Enables saving of hosting data')}
-                helper={__('See FAQ on how to make sure you are hosting')}
-              />
-            </Form>
-            <Form className="card__content">
-              <fieldset-section>
                 <FormField
-                  name="connections_select"
-                  type="select"
-                  label={__('Max Connections')}
-                  min={1}
-                  max={50}
-                  value={this.maxConnections}
-                  onChange={() => {
-                    this.onMaxConnectionsChange(maxConnections);
-                  }}
-                >
-                  {connectionOptions.map(connectionOption => (
-                    <option key={connectionOption} value={connectionOption}>
-                      {connectionOption}
-                    </option>
-                  ))}
-                </FormField>
-              </fieldset-section>
+                  type="setting"
+                  name="save_blobs"
+                  onChange={() => setDaemonSetting('save_blobs', !daemonSettings.save_blobs)}
+                  checked={daemonSettings.save_blobs}
+                  label={__('Enables saving of hosting data')}
+                  helper={__('See FAQ on how to make sure you are hosting')}
+                />
               </Form>
-
+              <Form className="card__content">
+                <fieldset-section>
+                  <FormField
+                    name="max_connections"
+                    type="select"
+                    label={__('Max Connections')}
+                    min={1}
+                    max={100}
+                    onChange={this.onMaxConnectionsChange}
+                    value={maxConnections}
+                  >
+                    {connectionOptions.map(connectionOption => (
+                      <option key={connectionOption} value={connectionOption}>
+                        {connectionOption}
+                      </option>
+                    ))}
+                  </FormField>
+                </fieldset-section>
+              </Form>
             </section>
 
             <section className="card card--section">
