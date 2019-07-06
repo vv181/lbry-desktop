@@ -35,7 +35,7 @@ type Props = {
   position: ?number,
   className: ?string,
   obscureNsfw: boolean,
-  play: string => void,
+  play: (string, boolean) => void,
   searchBarFocused: boolean,
   mediaType: string,
   claimRewards: () => void,
@@ -150,8 +150,13 @@ class FileViewer extends React.PureComponent<Props> {
     return this.props.fileInfo && nextProps.fileInfo && this.props.fileInfo.outpoint === nextProps.fileInfo.outpoint;
   }
 
+  playableType(): boolean {
+    const { mediaType } = this.props;
+    return ['audio', 'video'].indexOf(mediaType) !== -1;
+  }
+
   playContent() {
-    const { play, uri, fileInfo, isDownloading, isLoading, insufficientCredits } = this.props;
+    const { play, uri, fileInfo, isDownloading, isLoading, insufficientCredits, mediaType } = this.props;
 
     if (!fileInfo && insufficientCredits) {
       return;
@@ -167,8 +172,12 @@ class FileViewer extends React.PureComponent<Props> {
       this.startTime = Date.now();
     }
     // @endif
+    if (this.playableType()) {
+      play(uri, false);
+    } else {
+      play(uri,true);
+    }
 
-    play(uri);
   }
 
   logTimeToStart() {

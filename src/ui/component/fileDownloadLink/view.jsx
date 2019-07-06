@@ -22,7 +22,7 @@ type Props = {
   costInfo: ?{},
   restartDownload: (string, number) => void,
   openModal: (id: string, { path: string }) => void,
-  purchaseUri: string => void,
+  purchaseUri: (string, boolean) => void,
   pause: () => void,
 };
 
@@ -57,12 +57,12 @@ class FileDownloadLink extends React.PureComponent<Props> {
       }
 
       return (
-        <ToolTip label={__('Add to your library')}>
+        <ToolTip label={__('Save file to your library')}>
           <Button
             button="link"
             icon={ICONS.DOWNLOAD}
             onClick={() => {
-              purchaseUri(uri);
+              purchaseUri(uri, true);
 
               const { name, claim_id: claimId, nout, txid } = claim;
               // // ideally outpoint would exist inside of claim information
