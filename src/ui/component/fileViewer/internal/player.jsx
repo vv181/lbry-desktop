@@ -5,7 +5,6 @@ import * as React from 'react';
 
 // @if TARGET='app'
 import fs from 'fs';
-import { remote } from 'electron';
 // @endif
 
 import path from 'path';
@@ -20,17 +19,11 @@ type Props = {
   contentType: string,
   mediaType: string,
   downloadCompleted: boolean,
-  volume: number,
-  position: ?number,
   downloadPath: string,
   fileName: string,
   claim: StreamClaim,
   streamingUrl: string,
-  fileStauts: string,
-  onStartCb: ?() => void,
-  onFinishCb: ?() => void,
-  savePosition: number => void,
-  changeVolume: number => void,
+  fileStatus: string,
   viewerContainer: { current: ElementRef<any> },
   searchBarFocused: boolean,
 };
@@ -51,16 +44,7 @@ type State = {
 
 class MediaPlayer extends React.PureComponent<Props, State> {
   static SANDBOX_TYPES = ['application/x-lbry', 'application/x-ext-lbry'];
-  static FILE_MEDIA_TYPES = [
-    'text',
-    'script',
-    'e-book',
-    'comic-book',
-    'document',
-    '3D-file',
-    'video',
-    'audio',
-  ];
+  static FILE_MEDIA_TYPES = ['text', 'script', 'e-book', 'comic-book', 'document', '3D-file', 'video', 'audio'];
   static SANDBOX_SET_BASE_URL = 'http://localhost:5278/set/';
   static SANDBOX_CONTENT_BASE_URL = 'http://localhost:5278';
 
@@ -101,7 +85,7 @@ class MediaPlayer extends React.PureComponent<Props, State> {
     if (!searchBarFocused) {
       // Handle fullscreen shortcut key (f)
       if (event.keyCode === F_KEYCODE) {
-         this.toggleFullscreen();
+        this.toggleFullscreen();
       }
     }
   };
@@ -131,7 +115,6 @@ class MediaPlayer extends React.PureComponent<Props, State> {
       exitFullscreen();
     }
   };
-
 
   playableType(): boolean {
     const { mediaType } = this.props;
@@ -170,7 +153,7 @@ class MediaPlayer extends React.PureComponent<Props, State> {
         // Readable stream from file
         // @if TARGET='app'
         stream: opts => fs.createReadStream(downloadPath, opts),
-        downloadCompleted: downloadPath && downloadCompleted,
+        downloadCompleted: downloadPath !== null && downloadCompleted,
         url: streamingUrl,
         status: fileStatus,
         // @endif
