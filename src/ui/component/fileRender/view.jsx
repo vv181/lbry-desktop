@@ -17,6 +17,13 @@ import VideoViewer from 'component/viewers/videoViewer';
 //   'component/viewers/audioViewer')
 // );
 
+const AudioViewer = React.lazy<*>(() =>
+  import(
+    /* webpackChunkName: "audioViewer" */
+    'component/viewers/audioViewer'
+  )
+);
+
 const DocumentViewer = React.lazy<*>(() =>
   import(
     /* webpackChunkName: "documentViewer" */
@@ -69,7 +76,7 @@ type Props = {
     stream: string => void,
     fileType: string,
     contentType: string,
-    downloadPath: string,
+    downloadPath: ?string,
     downloadCompleted: boolean,
     url: ?string,
     status: string,
@@ -171,9 +178,20 @@ class FileRender extends React.PureComponent<Props> {
         />
       ),
       video: (
-        <VideoViewer claim={claim} source={{ stream, url, downloadPath, downloadCompleted, status }} contentType={contentType} poster={poster} />
+        <VideoViewer
+          claim={claim}
+          source={{ stream, url, downloadPath, downloadCompleted, status }}
+          contentType={contentType}
+          poster={poster}
+        />
       ),
-      // audio: <AudioViewer claim={claim} source={{ downloadPath, fileName }} contentType={contentType} />,
+      audio: (
+        <AudioViewer
+          claim={claim}
+          source={{ stream, url, downloadPath, downloadCompleted, status }}
+          contentType={contentType}
+        />
+      ),
       // Add routes to viewer...
     };
 
@@ -205,7 +223,7 @@ class FileRender extends React.PureComponent<Props> {
     // @endif
 
     // Message Error
-    const unsupportedMessage = __("Sorry, looks like we can't preview this file.");
+    const unsupportedMessage = __("Sorry, looks like we can't preview this file1.");
     const unsupported = <LoadingScreen status={unsupportedMessage} spinner={false} />;
 
     // Return viewer

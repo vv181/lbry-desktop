@@ -500,5 +500,18 @@
   "See FAQ on how to make sure you are hosting": "See FAQ on how to make sure you are hosting",
   "Network and Data Settings": "Network and Data Settings",
   "Max Connections": "Max Connections",
-  "Save file to your library": "Save file to your library"
+  "Save file to your library": "Save file to your library",
+  "Sorry, looks like we can't preview this file.2": "Sorry, looks like we can't preview this file.2",
+  "Waiting for stream...": "Waiting for stream...",
+  "Loading stream...": "Loading stream...",
+  "Requesting stream... not long left now!": "Requesting stream... not long left now!",
+  "Sorry, looks like we can't preview this file. Try opening it externally.": "Sorry, looks like we can't preview this file. Try opening it externally.",
+  "Sorry, looks like we can't preview this file. ": "Sorry, looks like we can't preview this file. ",
+  "Sorry, looks like we can't preview this file1.": "Sorry, looks like we can't preview this file1.",
+  "Rendering document.": "Rendering document.",
+  "Sorry, looks like we can't load the document.": "Sorry, looks like we can't load the document.",
+  "Toggle Visualizer": "Toggle Visualizer",
+  "Toggle Album Art": "Toggle Album Art",
+  "Toggle Details": "Toggle Details",
+  "Equalizer": "Equalizer"
 }

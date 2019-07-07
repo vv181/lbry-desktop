@@ -118,7 +118,7 @@ class MediaPlayer extends React.PureComponent<Props, State> {
 
   playableType(): boolean {
     const { mediaType } = this.props;
-    return ['audio', 'video'].indexOf(mediaType) !== -1;
+    return ['audio', 'video', 'image'].indexOf(mediaType) !== -1;
   }
 
   isSupportedFile() {
@@ -183,11 +183,11 @@ class MediaPlayer extends React.PureComponent<Props, State> {
     };
 
     // Loading message
-    const noFileMessage = __('Waiting for stream.');
+    const noFileMessage = __('Waiting for stream...');
 
     // Error message
     const unplayableMessage = __("Sorry, looks like we can't play this file.");
-    const unsupportedMessage = __("Sorry, looks like we can't preview this file.");
+    const unsupportedMessage = __("Sorry, looks like we can't preview this file.2");
 
     // Files
     const isLoadingFile = !source && isFileType;

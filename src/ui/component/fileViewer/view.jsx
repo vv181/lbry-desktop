@@ -141,7 +141,12 @@ class FileViewer extends React.PureComponent<Props> {
 
     if (playable && costInfo && costInfo.cost === 0 && !fileInfo && !isDownloading) {
       this.playContent();
-    } else if (playable && fileInfo && ((fileInfo.download_path && fileInfo.written_bytes > 0) || (fileInfo.blobs_completed === 0 && fileInfo.status === 'running'))) {
+    } else if (
+      playable &&
+      fileInfo &&
+      ((fileInfo.download_path && fileInfo.written_bytes > 0) ||
+        (fileInfo.blobs_completed === 0 && fileInfo.status === 'running'))
+    ) {
       this.playContent();
     }
   };
@@ -152,7 +157,7 @@ class FileViewer extends React.PureComponent<Props> {
 
   playableType(): boolean {
     const { mediaType } = this.props;
-    return ['audio', 'video'].indexOf(mediaType) !== -1;
+    return ['audio', 'video', 'image'].indexOf(mediaType) !== -1;
   }
 
   playContent() {
@@ -175,9 +180,8 @@ class FileViewer extends React.PureComponent<Props> {
     if (this.playableType()) {
       play(uri, false);
     } else {
-      play(uri,true);
+      play(uri, true);
     }
-
   }
 
   logTimeToStart() {
@@ -243,7 +247,10 @@ class FileViewer extends React.PureComponent<Props> {
     const isPlaying = playingUri === uri;
     let isReadyToPlay = false;
     // @if TARGET='app'
-    isReadyToPlay = fileInfo && ((fileInfo.download_path && fileInfo.written_bytes > 0) || (fileInfo.blobs_completed === 0 && fileInfo.status === 'running'));
+    isReadyToPlay =
+      fileInfo &&
+      ((fileInfo.download_path && fileInfo.written_bytes > 0) ||
+        (fileInfo.blobs_completed === 0 && fileInfo.status === 'running'));
     // @endif
     // @if TARGET='web'
     // try to play immediately on web, we don't need to call file_list since we are streaming from reflector
@@ -253,14 +260,14 @@ class FileViewer extends React.PureComponent<Props> {
     const shouldObscureNsfw = obscureNsfw && nsfw;
     let loadStatusMessage = '';
 
-    if (fileInfo && fileInfo.completed && (!fileInfo.download_path || !fileInfo.written_bytes)) {
+    if (fileInfo && fileInfo.blobs_completed > 1 && (!fileInfo.download_path || !fileInfo.written_bytes)) {
       loadStatusMessage = __(
         "It looks like you deleted or moved this file. We're rebuilding it now. It will only take a few seconds."
       );
     } else if (isLoading) {
-      loadStatusMessage = __('Requesting stream...');
+      loadStatusMessage = __('Loading stream...');
     } else if (isDownloading) {
-      loadStatusMessage = __('Downloading stream... not long left now!');
+      loadStatusMessage = __('Requesting stream... not long left now!');
     }
 
     const layoverClass = classnames('content__cover', {
