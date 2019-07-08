@@ -5,6 +5,7 @@ const path = require('path');
 const app = express();
 const port = 1337;
 const headRegex = /(<head>).*(<\/head>)/g;
+const chainqueryEndpoint = "https://chainquery.lbry.com/api/sql";
 
 app.use(express.static(__dirname));
 
@@ -20,12 +21,12 @@ app.get('*', async (req, res) => {
       return res.sendFile(path.join(__dirname, '/index.html'));
 
     case isChannel:
-      queryUrl = `https://chainquery.lbry.io/api/sql?query=SELECT channel.name as channel, claim.name, claim.description, claim.language, claim.thumbnail_url, claim.title FROM claim left join claim channel on claim.publisher_id = channel.claim_id where claim.claim_id="${identifier}"`;
+      queryUrl = `${chainqueryEndpoint}?query=SELECT channel.name as channel, claim.name, claim.description, claim.language, claim.thumbnail_url, claim.title FROM claim left join claim channel on claim.publisher_id = channel.claim_id where claim.claim_id="${identifier}"`;
       break;
 
     default:
       // isContentPage
-      queryUrl = `https://chainquery.lbry.io/api/sql?query=SELECT * FROM claim where claim_id="${identifier}"`;
+      queryUrl = `${chainqueryEndpoint}?query=SELECT * FROM claim where claim_id="${identifier}"`;
       break;
   }
 
