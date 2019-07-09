@@ -65,7 +65,7 @@ class FileViewer extends React.PureComponent<Props> {
 
   componentDidMount() {
     const { fileInfo } = this.props;
-    if (!fileInfo) {
+    if (!fileInfo || (fileInfo && (fileInfo.written_bytes === 0 || fileInfo.blobs_completed < 1))) {
       this.onFileStartCb = this.logTimeToStart;
     }
 
@@ -177,6 +177,7 @@ class FileViewer extends React.PureComponent<Props> {
       this.startTime = Date.now();
     }
     // @endif
+    // Passing true means saving file to disk, required for any non-streamable types
     if (this.playableType()) {
       play(uri, false);
     } else {
@@ -248,9 +249,7 @@ class FileViewer extends React.PureComponent<Props> {
     let isReadyToPlay = false;
     // @if TARGET='app'
     isReadyToPlay =
-      fileInfo &&
-      ((fileInfo.download_path && fileInfo.written_bytes > 0) ||
-        (fileInfo.blobs_completed === 0 && fileInfo.status === 'running'));
+      fileInfo && ((fileInfo.download_path && fileInfo.written_bytes > 0) || fileInfo.status === 'running');
     // @endif
     // @if TARGET='web'
     // try to play immediately on web, we don't need to call file_list since we are streaming from reflector
@@ -260,7 +259,7 @@ class FileViewer extends React.PureComponent<Props> {
     const shouldObscureNsfw = obscureNsfw && nsfw;
     let loadStatusMessage = '';
 
-    if (fileInfo && fileInfo.blobs_completed > 1 && (!fileInfo.download_path || !fileInfo.written_bytes)) {
+    if (fileInfo && fileInfo.blobs_completed >= 1 && (!fileInfo.download_path || !fileInfo.written_bytes)) {
       loadStatusMessage = __(
         "It looks like you deleted or moved this file. We're rebuilding it now. It will only take a few seconds."
       );

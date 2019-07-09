@@ -41,8 +41,6 @@ class FileDownloadLink extends React.PureComponent<Props> {
     }
   }
 
-  uri: ?string;
-
   render() {
     const { fileInfo, downloading, uri, openModal, purchaseUri, costInfo, loading, pause, claim } = this.props;
 
@@ -66,13 +64,14 @@ class FileDownloadLink extends React.PureComponent<Props> {
             button="link"
             icon={ICONS.DOWNLOAD}
             onClick={() => {
+              if (!fileInfo) {
+                const { name, claim_id: claimId, nout, txid } = claim;
+                // // ideally outpoint would exist inside of claim information
+                // // we can use it after https://github.com/lbryio/lbry/issues/1306 is addressed
+                const outpoint = `${txid}:${nout}`;
+                analytics.apiLogView(`${name}#${claimId}`, outpoint, claimId);
+              }
               purchaseUri(uri, true);
-
-              const { name, claim_id: claimId, nout, txid } = claim;
-              // // ideally outpoint would exist inside of claim information
-              // // we can use it after https://github.com/lbryio/lbry/issues/1306 is addressed
-              const outpoint = `${txid}:${nout}`;
-              analytics.apiLogView(`${name}#${claimId}`, outpoint, claimId);
             }}
           />
         </ToolTip>

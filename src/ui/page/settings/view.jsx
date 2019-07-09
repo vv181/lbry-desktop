@@ -214,8 +214,10 @@ class SettingsPage extends React.PureComponent<Props, State> {
                   name="save_files"
                   onChange={() => setDaemonSetting('save_files', !daemonSettings.save_files)}
                   checked={daemonSettings.save_files}
-                  label={__('Enables saving of all content to your downloads directory')}
-                  helper={__('This is not retroactive, only works from the time it was changed')}
+                  label={__(
+                    'Enables saving of all viewed content to your downloads directory. Some file types are saved by default.'
+                  )}
+                  helper={__('This is not retroactive, only works from the time it was changed.')}
                 />
               </Form>
               <Form className="card__content">
@@ -224,8 +226,13 @@ class SettingsPage extends React.PureComponent<Props, State> {
                   name="save_blobs"
                   onChange={() => setDaemonSetting('save_blobs', !daemonSettings.save_blobs)}
                   checked={daemonSettings.save_blobs}
-                  label={__('Enables saving of hosting data')}
-                  helper={__('See FAQ on how to make sure you are hosting')}
+                  label={
+                    <React.Fragment>
+                      {__('Enables saving of hosting data to help the LBRY network.')}{' '}
+                      <Button button="link" label={__('Learn more')} href="https://lbry.com/faq/host-content" />.
+                    </React.Fragment>
+                  }
+                  helper={__("If disabled, LBRY will be very sad and you won't be helping improve the network")}
                 />
               </Form>
               <Form className="card__content">

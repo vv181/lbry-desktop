@@ -513,5 +513,15 @@
   "Toggle Visualizer": "Toggle Visualizer",
   "Toggle Album Art": "Toggle Album Art",
   "Toggle Details": "Toggle Details",
-  "Equalizer": "Equalizer"
+  "Equalizer": "Equalizer",
+  "File Size": "File Size",
+  "This will appear as a tip for \"ALERT: Dems Will Be PISSED At How Trump Told Russia Not To ‘Meddle With Our Elections”\".": "This will appear as a tip for \"ALERT: Dems Will Be PISSED At How Trump Told Russia Not To ‘Meddle With Our Elections”\".",
+  "Enables saving of all content to your downloads directory. Some file types are saved by default.": "Enables saving of all content to your downloads directory. Some file types are saved by default.",
+  "Enables saving of hosting data to help the LBRY network": "Enables saving of hosting data to help the LBRY network",
+  "If disabled, LBRY will be very sad.": "If disabled, LBRY will be very sad.",
+  "If disabled, LBRY will be very sad and you won't be helping the network": "If disabled, LBRY will be very sad and you won't be helping the network",
+  "If disabled, LBRY will be very sad and you won't be helping improve the network": "If disabled, LBRY will be very sad and you won't be helping improve the network",
+  "Enables saving of all viewed content to your downloads directory. Some file types are saved by default.": "Enables saving of all viewed content to your downloads directory. Some file types are saved by default.",
+  "This is not retroactive, only works from the time it was changed.": "This is not retroactive, only works from the time it was changed.",
+  "Enables saving of hosting data to help the LBRY network.": "Enables saving of hosting data to help the LBRY network."
 }

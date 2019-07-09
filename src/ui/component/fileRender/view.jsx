@@ -70,7 +70,6 @@ const ThreeViewer = React.lazy<*>(() =>
 
 type Props = {
   mediaType: string,
-  poster?: string,
   claim: StreamClaim,
   source: {
     stream: string => void,
@@ -149,10 +148,12 @@ class FileRender extends React.PureComponent<Props> {
   }
 
   renderViewer() {
-    const { source, mediaType, currentTheme, poster, claim } = this.props;
+    const { source, mediaType, currentTheme, claim } = this.props;
+
+    const poster = claim.value.thumbnail && claim.value.thumbnail.url;
 
     // Extract relevant data to render file
-    const { stream, url, fileType, contentType, downloadPath, downloadCompleted, status, fileName } = source;
+    const { stream, url, fileType, contentType, downloadPath, downloadCompleted, status } = source;
 
     // Human-readable files (scripts and plain-text files)
     const readableFiles = ['text', 'document', 'script'];
@@ -223,7 +224,7 @@ class FileRender extends React.PureComponent<Props> {
     // @endif
 
     // Message Error
-    const unsupportedMessage = __("Sorry, looks like we can't preview this file1.");
+    const unsupportedMessage = __("Sorry, looks like we can't preview this file.");
     const unsupported = <LoadingScreen status={unsupportedMessage} spinner={false} />;
 
     // Return viewer

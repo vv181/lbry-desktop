@@ -67,10 +67,10 @@ class ModalRemoveFile extends React.PureComponent<Props, State> {
           </p>
         </section>
         <section className="card__content">
-          {fileInfo && fileInfo.download_path && (
+          {fileInfo && (fileInfo.download_path || fileInfo.blobs_completed >= 1) && (
             <FormField
               name="file_delete"
-              label={__('Also delete this file from my computer')}
+              label={__('Also delete this file and/or hosted data from my computer')}
               type="checkbox"
               checked={deleteChecked}
               onChange={this.handleDeleteCheckboxClicked}
