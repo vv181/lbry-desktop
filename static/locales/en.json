@@ -480,5 +480,12 @@
   "Got it!": "Got it!",
   "Filter": "Filter",
   "Rendering document.": "Rendering document.",
-  "Sorry, looks like we can't load the document.": "Sorry, looks like we can't load the document."
+  "Sorry, looks like we can't load the document.": "Sorry, looks like we can't load the document.",
+  "Tag Search": "Tag Search",
+  "Unfollow": "Unfollow",
+  "You haven't downloaded anything from LBRY yet.": "You haven't downloaded anything from LBRY yet.",
+  "Explore new content": "Explore new content",
+  "Blockchain Sync": "Blockchain Sync",
+  "Catching up with the blockchain": "Catching up with the blockchain",
+  "Refreshed!": "Refreshed!"
 }

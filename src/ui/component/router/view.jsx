@@ -1,5 +1,5 @@
 import * as PAGES from 'constants/pages';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Route, Redirect, Switch, withRouter } from 'react-router-dom';
 import SettingsPage from 'page/settings';
 import HelpPage from 'page/help';
@@ -28,23 +28,43 @@ if ('scrollRestoration' in history) {
 }
 
 const Scroll = withRouter(function ScrollWrapper(props) {
+  const [scrollHistory, setScrollHistory] = useState([0]);
+  // const [currentScroll, setCurrentScroll] = useState(0);
   const { pathname } = props.location;
+  const { action, length } = props.history;
+  console.log(props);
+
+  const scrollId = scrollHistory.slice().join('');
 
   useEffect(() => {
-    // Auto scroll to the top of a window for new pages
-    // The browser will handle scrolling if it needs to, but
-    // for new pages, react-router maintains the current y scroll position
-    // window.scrollTo(0, 0);
-    function handleScroll(e) {
-      console.log(e);
+    const scrollItems = scrollId.split('').map(string => Number(string));
+
+    if (action === 'PUSH') {
+      console.log(action);
+      console.log('current', scrollItems);
+      console.log('new', [...scrollItems, window.scrollY]);
+      // setScrollHistory([...scrollItems, window.scrollY]);
+      window.scrollTo(0, 0);
+    } else {
+      console.log(action);
+      let newScrollHistory = scrollItems.slice();
+      if (newScrollHistory.length > 1) {
+        newScrollHistory.pop();
+      }
+      console.log('current', scrollItems);
+      console.log('new', newScrollHistory);
+      setScrollHistory(newScrollHistory);
+
+      const newScrollY = newScrollHistory[newScrollHistory.length - 1];
+      console.log('newScrollY', newScrollY);
+      window.scrollTo(0, newScrollY);
     }
+  }, [pathname, action, setScrollHistory, scrollId]);
 
-    window.addEventListener('scroll', handleScroll);
+  // useEffect(() => {
+  // }, [action]);
 
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [pathname]);
+  console.log(scrollHistory);
 
   return props.children;
 });

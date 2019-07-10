@@ -50,20 +50,6 @@ let baseConfig = {
         loader: 'babel-loader',
       },
       {
-        test: /\.module.scss$/,
-        use: [
-          'style-loader',
-          {
-            loader: 'css-loader',
-            options: {
-              modules: true,
-            },
-          },
-          'postcss-loader',
-          'sass-loader',
-        ],
-      },
-      {
         test: /\.s?css$/,
         exclude: /\.module.scss$/,
         use: ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader'],
