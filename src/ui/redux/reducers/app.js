@@ -63,12 +63,20 @@ const defaultState: AppState = {
   isUpgradeSkipped: undefined,
   enhancedLayout: false,
   searchOptionsExpanded: false,
+  scrollHistory: [],
 };
 
 reducers[ACTIONS.DAEMON_READY] = state =>
   Object.assign({}, state, {
     daemonReady: true,
   });
+
+reducers['@@router/LOCATION_CHANGE'] = (state, action) => {
+  debugger;
+  return {
+    ...state,
+  };
+};
 
 reducers[ACTIONS.DAEMON_VERSION_MATCH] = state =>
   Object.assign({}, state, {

@@ -7,6 +7,7 @@ import { normalizeURI, SEARCH_TYPES, isURIValid, buildURI } from 'lbry-redux';
 import Icon from 'component/common/icon';
 import { parseQueryParams } from 'util/query-params';
 import Autocomplete from './internal/autocomplete';
+import { withRouter } from 'react-router';
 
 const L_KEY_CODE = 76;
 const ESC_KEY_CODE = 27;
@@ -51,10 +52,12 @@ class WunderBar extends React.PureComponent<Props, State> {
 
   getSuggestionIcon = (type: string) => {
     switch (type) {
-      case 'file':
+      case SEARCH_TYPES.FILE:
         return ICONS.FILE;
-      case 'channel':
+      case SEARCH_TYPES.CHANNEL:
         return ICONS.CHANNEL;
+      case SEARCH_TYPES.TAG:
+        return ICONS.TAG;
       default:
         return ICONS.SEARCH;
     }
@@ -90,7 +93,7 @@ class WunderBar extends React.PureComponent<Props, State> {
   }
 
   handleSubmit(value: string, suggestion?: { value: string, type: string }) {
-    const { onSubmit, onSearch, doShowSnackBar } = this.props;
+    const { onSubmit, onSearch, doShowSnackBar, history } = this.props;
 
     const query = value.trim();
     const showSnackError = () => {
@@ -99,8 +102,10 @@ class WunderBar extends React.PureComponent<Props, State> {
 
     // User selected a suggestion
     if (suggestion) {
-      if (suggestion.type === 'search') {
+      if (suggestion.type === SEARCH_TYPES.SEARCH) {
         onSearch(query);
+      } else if (suggestion.type === SEARCH_TYPES.TAG) {
+        history.push(`/$/${PAGES.TAGS}?t=${suggestion.value}`);
       } else if (isURIValid(query)) {
         const uri = normalizeURI(query);
         onSubmit(uri);
@@ -157,7 +162,7 @@ class WunderBar extends React.PureComponent<Props, State> {
           )}
           renderItem={({ value, type }, isHighlighted) => (
             <div
-              key={value}
+              key={`${value}-${type}`}
               className={classnames('wunderbar__suggestion', {
                 'wunderbar__active-suggestion': isHighlighted,
               })}
@@ -169,6 +174,7 @@ class WunderBar extends React.PureComponent<Props, State> {
                   {type === SEARCH_TYPES.SEARCH && __('Search')}
                   {type === SEARCH_TYPES.CHANNEL && __('View channel')}
                   {type === SEARCH_TYPES.FILE && __('View file')}
+                  {type === SEARCH_TYPES.TAG && __('View Tag')}
                 </span>
               )}
             </div>
@@ -179,4 +185,4 @@ class WunderBar extends React.PureComponent<Props, State> {
   }
 }
 
-export default WunderBar;
+export default withRouter(WunderBar);

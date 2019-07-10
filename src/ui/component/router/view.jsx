@@ -1,5 +1,5 @@
 import * as PAGES from 'constants/pages';
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Route, Redirect, Switch, withRouter } from 'react-router-dom';
 import SettingsPage from 'page/settings';
 import HelpPage from 'page/help';
@@ -22,14 +22,32 @@ import TagsPage from 'page/tags';
 import FollowingPage from 'page/following';
 
 const Scroll = withRouter(function ScrollWrapper(props) {
+  const { history } = props;
   const { pathname } = props.location;
 
+  const { length } = history;
+  const [previousLength, setPreviousLength] = useState(length);
+  console.log(history);
+  console.log('length', length);
+  console.log('previousLength', previousLength);
   useEffect(() => {
+    if (length === previousLength) {
+      return;
+    }
+
+    setPreviousLength(length);
+    const wentForward = length > previousLength;
+    if (wentForward) {
+      console.log('went forward, scroll up');
+      window.scrollTo(0, 0);
+    } else {
+      console.log('went back');
+    }
+
     // Auto scroll to the top of a window for new pages
     // The browser will handle scrolling if it needs to, but
     // for new pages, react-router maintains the current y scroll position
-    window.scrollTo(0, 0);
-  }, [pathname]);
+  }, [length, previousLength]);
 
   return props.children;
 });
