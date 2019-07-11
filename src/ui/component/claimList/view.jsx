@@ -102,12 +102,28 @@ export default function ClaimList(props: Props) {
       )}
       {hasUris && (
         <ul>
-          {sortedUris.map((uri, index) => (
-            <React.Fragment key={uri}>
-              <ClaimPreview uri={uri} type={type} placeholder={loading && (!page || page === 1)} />
-              {index === 4 && injectedItem && <li className="claim-preview--injected">{injectedItem}</li>}
-            </React.Fragment>
-          ))}
+          {sortedUris.map((uri, index) => {
+            const onEntryCallback =
+              index !== 1 && index % pageSize === 1
+                ? () => {
+                    console.log('callback!!');
+                  }
+                : null;
+
+            return (
+              <React.Fragment key={uri}>
+                <div style={index !== 1 && index % pageSize === 1 ? { backgroundColor: 'red' } : {}}>
+                  <ClaimPreview
+                    onEntryCallback={onEntryCallback}
+                    uri={uri}
+                    type={type}
+                    placeholder={loading && (!page || page === 1)}
+                  />
+                </div>
+                {index === 4 && injectedItem && <li className="claim-preview--injected">{injectedItem}</li>}
+              </React.Fragment>
+            );
+          })}
         </ul>
       )}
       {!hasUris && !loading && <h2 className="main--empty empty">{empty || __('No results')}</h2>}

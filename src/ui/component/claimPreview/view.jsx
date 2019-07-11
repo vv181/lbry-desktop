@@ -51,6 +51,7 @@ function ClaimPreview(props: Props) {
     placeholder,
     type,
     blackListedOutpoints,
+    hasVisited,
   } = props;
   const haventFetched = claim === undefined;
   const abandoned = !isResolvingUri && !claim && !placeholder;
@@ -113,7 +114,8 @@ function ClaimPreview(props: Props) {
       onContextMenu={handleContextMenu}
       className={classnames('claim-preview', {
         'claim-preview--large': type === 'large',
-        'claim-list__pending': pending,
+        'claim-preview--visited': !claimIsMine && hasVisited,
+        'claim-preview--pending': pending,
       })}
     >
       {isChannel ? <ChannelThumbnail uri={uri} /> : <CardMedia thumbnail={thumbnail} />}

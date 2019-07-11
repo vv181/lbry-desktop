@@ -63,7 +63,8 @@ const defaultState: AppState = {
   isUpgradeSkipped: undefined,
   enhancedLayout: false,
   searchOptionsExpanded: false,
-  scrollHistory: [],
+  currentScroll: 0,
+  scrollHistory: [0],
 };
 
 reducers[ACTIONS.DAEMON_READY] = state =>
@@ -71,10 +72,28 @@ reducers[ACTIONS.DAEMON_READY] = state =>
     daemonReady: true,
   });
 
+reducers['UPDATE_SCROLL'] = (state, action) => ({
+  ...state,
+  scroll: action.data,
+});
+
 reducers['@@router/LOCATION_CHANGE'] = (state, action) => {
-  debugger;
+  const scrollHistory = state.scrollHistory.slice();
+  const { action: name } = action.payload;
+
+  let currentScroll;
+  if (name === 'PUSH') {
+    scrollHistory.push(window.scrollY);
+    currentScroll = 0;
+  } else {
+    currentScroll = scrollHistory[scrollHistory.length - 1];
+    scrollHistory.pop();
+  }
+
   return {
     ...state,
+    scrollHistory,
+    currentScroll,
   };
 };
 

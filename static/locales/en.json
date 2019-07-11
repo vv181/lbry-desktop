@@ -545,5 +545,9 @@
   "View on lbry.tv": "View on lbry.tv",
   "Invalid character %s in name: %s.": "Invalid character %s in name: %s.",
   "URI does not include name.": "URI does not include name.",
-  "View Tag": "View Tag"
+  "View Tag": "View Tag",
+  "This link leads to an external website.": "This link leads to an external website.",
+  "Today": "Today",
+  "This": "This",
+  "All time": "All time"
 }

@@ -21,67 +21,81 @@ import NavigationHistory from 'page/navigationHistory';
 import TagsPage from 'page/tags';
 import FollowingPage from 'page/following';
 
-const Scroll = withRouter(function ScrollWrapper(props) {
-  const { history } = props;
-  const { pathname } = props.location;
+// const Scroll = withRouter(function ScrollWrapper(props) {
+//   const { history, scroll } = props;
+//   const { pathname } = props;
+//   console.log('scroll', props);
 
-  const { length } = history;
-  const [previousLength, setPreviousLength] = useState(length);
-  console.log(history);
-  console.log('length', length);
-  console.log('previousLength', previousLength);
+//   useEffect(() => {
+//     // if (length === previousLength) {
+//     //   return;
+//     // }
+//     // setPreviousLength(length);
+//     // const wentForward = length > previousLength;
+//     // if (wentForward) {
+//     //   console.log('went forward, scroll up');
+//     //   window.scrollTo(0, 0);
+//     // } else {
+//     //   console.log('went back');
+//     // }
+//     // Auto scroll to the top of a window for new pages
+//     // The browser will handle scrolling if it needs to, but
+//     // for new pages, react-router maintains the current y scroll position
+//   }, []);
+
+//   return props.children;
+// });
+
+if ('scrollRestoration' in history) {
+  // Back off, browser, I got this...
+  history.scrollRestoration = 'manual';
+}
+
+function AppRouter(props) {
+  // console.log(props);
+
+  const { scrollHistory, currentScroll, location } = props;
+  const scroll = scrollHistory[scrollHistory.length - 1];
+  const path = location.pathname;
+  const { pathname, search } = location;
+  const [previousUrl, setPreviousUrl] = useState();
+  console.log(search);
+  const url = `${pathname}${search.replace(/\?page=\d+/, '')}`;
+  console.log(url);
+  // console.log(scrollHistory);
   useEffect(() => {
-    if (length === previousLength) {
-      return;
-    }
+    window.scrollTo(0, currentScroll);
+  }, [currentScroll, url]);
 
-    setPreviousLength(length);
-    const wentForward = length > previousLength;
-    if (wentForward) {
-      console.log('went forward, scroll up');
-      window.scrollTo(0, 0);
-    } else {
-      console.log('went back');
-    }
-
-    // Auto scroll to the top of a window for new pages
-    // The browser will handle scrolling if it needs to, but
-    // for new pages, react-router maintains the current y scroll position
-  }, [length, previousLength]);
-
-  return props.children;
-});
-
-export default function AppRouter() {
   return (
-    <Scroll>
-      <Switch>
-        <Route path="/" exact component={DiscoverPage} />
-        <Route path={`/$/${PAGES.DISCOVER}`} exact component={DiscoverPage} />
-        <Route path={`/$/${PAGES.AUTH}`} exact component={AuthPage} />
-        <Route path={`/$/${PAGES.INVITE}`} exact component={InvitePage} />
-        <Route path={`/$/${PAGES.DOWNLOADED}`} exact component={FileListDownloaded} />
-        <Route path={`/$/${PAGES.PUBLISHED}`} exact component={FileListPublished} />
-        <Route path={`/$/${PAGES.HELP}`} exact component={HelpPage} />
-        <Route path={`/$/${PAGES.PUBLISH}`} exact component={PublishPage} />
-        <Route path={`/$/${PAGES.REPORT}`} exact component={ReportPage} />
-        <Route path={`/$/${PAGES.REWARDS}`} exact component={RewardsPage} />
-        <Route path={`/$/${PAGES.SEARCH}`} exact component={SearchPage} />
-        <Route path={`/$/${PAGES.SETTINGS}`} exact component={SettingsPage} />
-        <Route path={`/$/${PAGES.TRANSACTIONS}`} exact component={TransactionHistoryPage} />
-        <Route path={`/$/${PAGES.LIBRARY}`} exact component={LibraryPage} />
-        <Route path={`/$/${PAGES.ACCOUNT}`} exact component={AccountPage} />
-        <Route path={`/$/${PAGES.LIBRARY}/all`} exact component={NavigationHistory} />
-        <Route path={`/$/${PAGES.TAGS}`} exact component={TagsPage} />
-        <Route path={`/$/${PAGES.FOLLOWING}`} exact component={FollowingPage} />
-        <Route path={`/$/${PAGES.WALLET}`} exact component={WalletPage} />
-        {/* Below need to go at the end to make sure we don't match any of our pages first */}
-        <Route path="/:claimName" exact component={ShowPage} />
-        <Route path="/:claimName/:contentName" exact component={ShowPage} />
+    <Switch>
+      <Route path="/" exact component={DiscoverPage} />
+      <Route path={`/$/${PAGES.DISCOVER}`} exact component={DiscoverPage} />
+      <Route path={`/$/${PAGES.AUTH}`} exact component={AuthPage} />
+      <Route path={`/$/${PAGES.INVITE}`} exact component={InvitePage} />
+      <Route path={`/$/${PAGES.DOWNLOADED}`} exact component={FileListDownloaded} />
+      <Route path={`/$/${PAGES.PUBLISHED}`} exact component={FileListPublished} />
+      <Route path={`/$/${PAGES.HELP}`} exact component={HelpPage} />
+      <Route path={`/$/${PAGES.PUBLISH}`} exact component={PublishPage} />
+      <Route path={`/$/${PAGES.REPORT}`} exact component={ReportPage} />
+      <Route path={`/$/${PAGES.REWARDS}`} exact component={RewardsPage} />
+      <Route path={`/$/${PAGES.SEARCH}`} exact component={SearchPage} />
+      <Route path={`/$/${PAGES.SETTINGS}`} exact component={SettingsPage} />
+      <Route path={`/$/${PAGES.TRANSACTIONS}`} exact component={TransactionHistoryPage} />
+      <Route path={`/$/${PAGES.LIBRARY}`} exact component={LibraryPage} />
+      <Route path={`/$/${PAGES.ACCOUNT}`} exact component={AccountPage} />
+      <Route path={`/$/${PAGES.LIBRARY}/all`} exact component={NavigationHistory} />
+      <Route path={`/$/${PAGES.TAGS}`} exact component={TagsPage} />
+      <Route path={`/$/${PAGES.FOLLOWING}`} exact component={FollowingPage} />
+      <Route path={`/$/${PAGES.WALLET}`} exact component={WalletPage} />
+      {/* Below need to go at the end to make sure we don't match any of our pages first */}
+      <Route path="/:claimName" exact component={ShowPage} />
+      <Route path="/:claimName/:contentName" exact component={ShowPage} />
 
-        {/* Route not found. Mostly for people typing crazy urls into the url */}
-        <Route render={() => <Redirect to="/" />} />
-      </Switch>
-    </Scroll>
+      {/* Route not found. Mostly for people typing crazy urls into the url */}
+      <Route render={() => <Redirect to="/" />} />
+    </Switch>
   );
 }
+
+export default withRouter(AppRouter);
